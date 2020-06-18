@@ -5,8 +5,12 @@ import App from './App'
 import router from '@/router'
 import './permission' // permission control
 import api from '@/api' // 引入api
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
 
 Vue.config.productionTip = false
+
+Vue.use(ElementUI)
 
 Vue.prototype.$api = api
 

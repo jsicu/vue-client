@@ -61,6 +61,7 @@ module.exports = {
   //   proxy: 'localhost:3000'
   // }
   devServer: {
+    port: 3999, // 端口
     proxy: {
       "/api": {
         target: "http://localhost:4000",

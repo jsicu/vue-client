@@ -1,10 +1,9 @@
 import axios from 'axios'
 import qs from 'qs'
 import config from '@/config'
+import { Message } from "element-ui";
 
-export const PATH_URL = process.env.NODE_ENV === 'development'
-  ? config.base_url.dev
-  : config.base_url.pro
+export const PATH_URL = process.env.NODE_ENV === 'development' ? config.base_url.dev : config.base_url.pro
 // const PATH_URL = '/api'
 
 // let host = location.host
@@ -51,50 +50,30 @@ service.interceptors.request.use(
   }
 )
 
-// // response 拦截器
-// service.interceptors.response.use(
-//   response => {
-
-//     if (response.data.code === 1 || (!response.data.code && response.data.code !== 0)) {
-//       return response.data.data || response.data
-//     } else if (response.data.code === 3001 || response.data.code === 3002) {
-//       config.one_message ? ResetMessage.error(response.data.message) : Message.error(response.data.message)
-//       wsCache.delete('userInfo')
-//       store.dispatch('delAllViews')
-//       resetRouter()
-//       window.location.href = 'login.html'
-//     } else if (response.data.code === 4001) {
-//       MessageBox({
-//         title: '提示',
-//         message: response.data.message,
-//         confirmButtonText: '确定'
-//       })
-//     } else if (response.data.code === 4000) {
-//       return response.data
-//     } else {
-//       if (response.config.url.includes('/matter/task-verify')) {
-//         config.one_message ? ResetMessage({
-//           showClose: true,
-//           message: response.data.message,
-//           type: 'error',
-//           duration: 0
-//         }) : Message({
-//           showClose: true,
-//           message: response.data.message,
-//           type: 'error',
-//           duration: 0
-//         })
-//       } else {
-//         config.one_message ? ResetMessage.error(response.data.message) : Message.error(response.data.message)
-//         // Message.error(response.data.message)
-//       }
-//     }
-//   },
-//   error => {
-//     console.log('err' + error) // for debug
-//     if (error.response) config.one_message ? ResetMessage.error(error.response.data.message) : Message.error(error.response.data.message)
-//     return Promise.reject(error)
-//   }
-// )
+// response 拦截器
+service.interceptors.response.use(
+  res => {
+    /**
+     * 返回体格式
+     * {
+     *   code 错误码 
+     *   data 数据
+     *   message 错误描述
+     * }
+     */
+    if (res.data.code === 1) {
+      return res.data.data
+    } else {
+      // config.one_message ? ResetMessage.error(response.data.message) : Message.error(response.data.message)
+      Message.error(res.data.message)
+    }
+  },
+  error => {
+    console.log('err' + error) // for debug
+    if (error.response)
+      config.one_message ? ResetMessage.error(error.response.data.message) : Message.error(error.response.data.message)
+    return Promise.reject(error)
+  }
+)
 
 export default service

@@ -1,8 +1,3 @@
-import { get, post } from "./axios";
+import login from './modules/login'
 
-export default {
-  // 测试接口
-  publicKey: function(params) {
-    return post(params, "/security/publicKey");
-  }
-};
+export default { login }
