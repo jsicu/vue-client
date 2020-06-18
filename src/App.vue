@@ -1,30 +1,24 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png" />
-    <router-view />
+    <img alt="Vue logo" src="./assets/logo.png" />
+    <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
+import HelloWorld from './components/HelloWorld.vue'
 
 export default {
   name: 'App',
-  mounted() {
-    // axios.get('http://10.18.14.152:8078/test')
-    //   .then(res => {
-    //     console.log(res)
-    //   })
-    //   .catch(err => {
-    //     console.log(err)
-    //   })
+  components: {
+    HelloWorld
   }
 }
 </script>
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
