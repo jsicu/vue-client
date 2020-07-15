@@ -29,12 +29,13 @@ module.exports = {
     );
     config.resolve.alias
       .set("@components", resolve("src/components")) // key,value自行定义，比如.set('@@', resolve('src/components'))
-      .set("@pages", resolve("src/pages"));
+      .set("@pages", resolve("src/pages"))
+      .set("@mainView", resolve("src/pages/main/view"));
     config.module.rule("svg").uses.clear();
     config.module
       .rule("svg")
       .test(/\.svg$/)
-      .include.add(resolve("src/assets"))
+      .include.add(resolve("src/icons"))
       .end()
       .use("svg-sprite-loader")
       .loader("svg-sprite-loader")

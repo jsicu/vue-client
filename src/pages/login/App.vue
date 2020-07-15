@@ -29,7 +29,8 @@ export default {
   },
   methods: {
     signIn() {
-      this.publicKey()
+      window.location.href = 'main.html'
+      // this.publicKey()
     },
     async publicKey() {
       // 获取加密公钥
@@ -46,7 +47,9 @@ export default {
     async login() {
       //  加密后登录
       const res = await this.$api.login.login(this.form)
-      console.log(res)
+      if (res) {
+        window.location.href = 'main.html'
+      }
     }
   }
 }

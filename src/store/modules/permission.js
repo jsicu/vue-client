@@ -1,0 +1,129 @@
+import { asyncRoutes, constantRoutes } from '@/router'
+import wsCache from '@/cache'
+import path from 'path'
+
+const permission = {
+  state: {
+    routes: [],
+    addRouters: []
+    // addOutsideRouters: []
+  },
+  mutations: {
+    SET_ROUTERS: (state, routes) => {
+      const arr = generateRoutes(asyncRoutes).filter(v => { // 比对后台返回的菜单数据
+        if (v.children) {
+          return v.children.filter(k => {
+            if (k.children) {
+              v.children = v.children.concat(k.children)
+              delete k.children
+            }
+          })
+        }
+      })
+      // state.addRouters = asyncRoutes
+      // console.log(arr)
+      state.addRouters = arr // 比对后台返回的菜单数据
+      console.log(arr)
+      // console.log(constantRoutes.concat(routes))
+      state.routes = constantRoutes.concat(routes)
+    },
+  },
+  actions: {
+    GenerateRoutes({ commit }) {
+      return new Promise(resolve => {
+       const result = asyncRoutes
+        // const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
+        //   path: '*',
+        //   redirect: '/404',
+        //   hidden: true
+        // }])
+        commit('SET_ROUTERS', result)
+        resolve()
+      })
+    },
+    RenderNewMenu({ commit }) {
+      return new Promise(resolve => {
+        const result = asyncRoutes
+        // const result = renderMenuRoute(asyncRoutes).concat([{
+        //   path: '*',
+        //   redirect: '/404',
+        //   hidden: true
+        // }])
+        commit('SET_ROUTERS', result)
+        resolve()
+      })
+    },
+  }
+}
+
+function renderMenuRoute(routes, basePath = '/') {
+  const res = []
+  for (const route of routes) {
+    if (route.hidden) { continue }
+    let onlyOneChild = null
+    if (route.children && route.children.length === 1) {
+      onlyOneChild = path.resolve(route.path, route.children[0].path)
+    }
+    let data = null
+    for (const item of wsCache.get('newMenu')) {
+      // if (path.resolve(basePath, onlyOneChild || route.path) === item.alias) {
+      if (route.path === item.alias) {
+        data = Object.assign({}, route)
+        data.path = path.resolve(basePath, onlyOneChild || route.path)
+        if (route.children) {
+          data.children = []
+        }
+      }
+    }
+    if (route.children && data) {
+      data.children = renderMenuRoute(route.children, data.path)
+    }
+    if (data) {
+      res.push(data)
+    }
+  }
+  return res
+}
+
+function generateRoutes(routes, basePath = '/') {
+  const res = []
+  // console.log(routes)
+  for (const route of routes) {
+    // skip some route
+    if (route.hidden) { continue }
+
+    let onlyOneChild = null
+
+    if (route.children && route.children.length === 1) {
+      onlyOneChild = path.resolve(route.path, route.children[0].path)
+    }
+
+    let data = null
+    // console.log((wsCache.get('menuList') && wsCache.get('menuList').list) || wsCache.get('newMenu'))
+    const list = (wsCache.get('menuList') && wsCache.get('menuList').list) || wsCache.get('newMenu')
+    // console.log(list)
+    for (const item of list) {
+      if (route.path === item.alias) {
+        data = Object.assign({}, route)
+        data.path = path.resolve(basePath, onlyOneChild || route.path)
+        if (data.meta) {
+          data.meta.title = item.name
+        }
+        if (route.children) {
+          data.children = []
+        }
+      }
+    }
+    // console.log(data)
+    // recursive child routes
+    if (route.children && data) {
+      data.children = generateRoutes(route.children, data.path)
+    }
+    if (data) {
+      res.push(data)
+    }
+  }
+  return res
+}
+
+export default permission
