@@ -7,12 +7,14 @@ import './permission' // permission control
 import api from '@/api' // 引入api
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import wsCache from '@/cache' // 本地存储
 
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
 
 Vue.prototype.$api = api
+Vue.prototype.$wsCache = wsCache
 
 /* eslint-disable no-new */
 new Vue({

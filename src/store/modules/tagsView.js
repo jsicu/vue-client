@@ -11,7 +11,6 @@ const tagsView = {
           title: view.meta.title || 'no-name'
         })
       )
-      console.log(state.visitedViews)
     },
     ADD_CACHED_VIEW: (state, view) => {
       if (state.cachedViews.includes(view.name)) return
@@ -21,11 +20,9 @@ const tagsView = {
     },
 
     DEL_VISITED_VIEW: (state, view) => {
-      console.log(state.visitedViews.entries())
       for (const [i, v] of state.visitedViews.entries()) {
         if (v.path === view.path) {
           state.visitedViews.splice(i, 1)
-          console.log(state.visitedViews)
           break
         }
       }
@@ -35,7 +32,6 @@ const tagsView = {
         if (i === view.name) {
           const index = state.cachedViews.indexOf(i)
           state.cachedViews.splice(index, 1)
-          console.log(state.cachedViews)
           break
         }
       }

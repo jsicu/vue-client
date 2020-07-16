@@ -7,5 +7,8 @@ export default {
   },
   login: function(params) {
     return post(params, '/security/login')
+  },
+  logout: function(params) {
+    return post(params, '/security/logout')
   }
 }

@@ -10,8 +10,8 @@
     <!-- 面包屑 -->
     <breadcrumb id="breadcrumb-container" class="breadcrumb-container" />
     <!-- 退出可能会放到其他地方，暂时注释 -->
-    <!-- <div class="right-menu">
-      <template v-if="device!=='mobile'">
+    <div class="right-menu">
+      <!-- <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
 
         <error-log class="errLog-container right-menu-item hover-effect" />
@@ -21,37 +21,32 @@
         <el-tooltip content="Global Size" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect" />
         </el-tooltip>
-      </template>
+      </template> -->
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar" />
+          <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif" class="user-avatar" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>Profile</el-dropdown-item>
-          </router-link>
-          <router-link to="/">
-            <el-dropdown-item>Dashboard</el-dropdown-item>
-          </router-link>
-          <a target="_blank" href="https://github.com/PanJiaChen/vue-element-admin/">
+          <a target="_blank" href="https://github.com/lzq741167479/vue-client">
             <el-dropdown-item>Github</el-dropdown-item>
           </a>
-          <a target="_blank" href="https://panjiachen.github.io/vue-element-admin-site/#/">
-            <el-dropdown-item>Docs</el-dropdown-item>
+          <a target="_blank" href="https://blog.csdn.net/qq_38734862/article/details/106662124">
+            <el-dropdown-item>博客文档</el-dropdown-item>
           </a>
           <el-dropdown-item divided @click.native="logout">
-            <span style="display:block;">Log Out</span>
+            <span style="display:block;">退出</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-    </div>-->
+    </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
+import { resetRouter } from '@/router'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 // import ErrorLog from '@/components/ErrorLog'
@@ -76,8 +71,12 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     async logout() {
-      await this.$store.dispatch('user/logout')
-      this.$router.push(`/login?redirect=${this.$route.fullPath}`)
+      const res = await this.$api.login.logout()
+      sessionStorage.removeItem('userInfo')
+      sessionStorage.removeItem('menuList')
+      resetRouter() // 重置静态路由表
+      window.location.href = 'login.html'
+      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
 }
@@ -121,24 +120,24 @@ export default {
     &:focus {
       outline: none;
     }
+    // 全屏等按钮样式
+    // .right-menu-item {
+    //   display: inline-block;
+    //   padding: 0 8px;
+    //   height: 100%;
+    //   font-size: 18px;
+    //   color: #5a5e66;
+    //   vertical-align: text-bottom;
 
-    .right-menu-item {
-      display: inline-block;
-      padding: 0 8px;
-      height: 100%;
-      font-size: 18px;
-      color: #5a5e66;
-      vertical-align: text-bottom;
+    //   &.hover-effect {
+    //     cursor: pointer;
+    //     transition: background 0.3s;
 
-      &.hover-effect {
-        cursor: pointer;
-        transition: background 0.3s;
-
-        &:hover {
-          background: rgba(0, 0, 0, 0.025);
-        }
-      }
-    }
+    //     &:hover {
+    //       background: rgba(0, 0, 0, 0.025);
+    //     }
+    //   }
+    // }
 
     .avatar-container {
       margin-right: 30px;

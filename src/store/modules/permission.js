@@ -20,11 +20,7 @@ const permission = {
           })
         }
       })
-      // state.addRouters = asyncRoutes
-      // console.log(arr)
       state.addRouters = arr // 比对后台返回的菜单数据
-      console.log(arr)
-      // console.log(constantRoutes.concat(routes))
       state.routes = constantRoutes.concat(routes)
     },
   },

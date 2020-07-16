@@ -1,7 +1,9 @@
 import axios from 'axios'
 import qs from 'qs'
 import config from '@/config'
-import { Message } from "element-ui";
+import wsCache from '@/cache'
+
+import { Message } from 'element-ui'
 
 export const PATH_URL = process.env.NODE_ENV === 'development' ? config.base_url.dev : config.base_url.pro
 // const PATH_URL = '/api'
@@ -24,17 +26,9 @@ const service = axios.create({
 // // request拦截器
 service.interceptors.request.use(
   config => {
-    // if (config.params && config.params.deviceId) {
-    //   config.headers['deviceId'] = config.params.deviceId
-    // }
-    // if (config.method === 'post') {
-    //   if (config.data && config.data.Authorization) {
-    //     config.headers['Authorization'] = config.data.Authorization
-    //   }
-    //   if (config.data && config.data.deviceId) {
-    //     config.headers['deviceId'] = config.data.deviceId
-    //   }
-    // }
+    if (wsCache.get('userInfo')) {
+      config.headers['token'] = wsCache.get('userInfo').token
+    }
     if (config.method === 'post' && config.headers['Content-Type'] === 'application/x-www-form-urlencoded') {
       config.data = qs.stringify(config.data)
     }
@@ -56,7 +50,7 @@ service.interceptors.response.use(
     /**
      * 返回体格式
      * {
-     *   code 错误码 
+     *   code 错误码
      *   data 数据
      *   message 错误描述
      * }

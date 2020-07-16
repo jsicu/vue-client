@@ -171,4 +171,10 @@ const createRouter = () =>
 
 const router = createRouter()
 
+// 重新实例化一个新的路由，替换之前的路由
+export function resetRouter() {
+  const newRouter = createRouter()
+  router.matcher = newRouter.matcher
+}
+
 export default router

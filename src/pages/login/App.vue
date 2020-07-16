@@ -29,13 +29,12 @@ export default {
   },
   methods: {
     signIn() {
-      window.location.href = 'main.html'
-      // this.publicKey()
+      // window.location.href = 'main.html'
+      this.publicKey()
     },
     async publicKey() {
       // 获取加密公钥
       const res = await this.$api.login.publicKey()
-      console.log(this.form)
       if (res) {
         const encrypt = new JSEncrypt()
         encrypt.setPublicKey(res)
@@ -48,6 +47,7 @@ export default {
       //  加密后登录
       const res = await this.$api.login.login(this.form)
       if (res) {
+        this.$wsCache.set('userInfo', res)
         window.location.href = 'main.html'
       }
     }

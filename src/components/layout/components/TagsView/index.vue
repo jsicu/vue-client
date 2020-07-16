@@ -112,9 +112,7 @@ export default {
     },
     addTags() {
       const { name } = this.$route
-      console.log(this.$route)
       if (name) {
-        console.log(this.$route)
         this.$store.dispatch('addView', this.$route)
       }
       return false
