@@ -8,22 +8,13 @@ import { Message } from 'element-ui'
 export const PATH_URL = process.env.NODE_ENV === 'development' ? config.base_url.dev : config.base_url.pro
 // const PATH_URL = '/api'
 
-// let host = location.host
-// let hostAddress = host.substr(0, host.length - 4)
-
-// 创建axios实例
-// const service = axios.create({
-//   baseURL: 'http://' + hostAddress + '8088/', // api 的 base_url
-//   timeout: 60000 // 请求超时时间
-// })
-
 // 创建axios实例
 const service = axios.create({
   baseURL: PATH_URL, // api 的 base_url
   timeout: 60000 // 请求超时时间
 })
 
-// // request拦截器
+// request拦截器
 service.interceptors.request.use(
   config => {
     if (wsCache.get('userInfo')) {
