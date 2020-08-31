@@ -6,7 +6,6 @@ const permission = {
   state: {
     routes: [],
     addRouters: []
-    // addOutsideRouters: []
   },
   mutations: {
     SET_ROUTERS: (state, routes) => {
@@ -27,24 +26,24 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
-       const result = asyncRoutes
-        // const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
-        //   path: '*',
-        //   redirect: '/404',
-        //   hidden: true
-        // }])
+        // const result = asyncRoutes
+        const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
+          path: '*',
+          redirect: '/404',
+          hidden: true
+        }])
         commit('SET_ROUTERS', result)
         resolve()
       })
     },
     RenderNewMenu({ commit }) {
       return new Promise(resolve => {
-        const result = asyncRoutes
-        // const result = renderMenuRoute(asyncRoutes).concat([{
-        //   path: '*',
-        //   redirect: '/404',
-        //   hidden: true
-        // }])
+        // const result = asyncRoutes
+        const result = renderMenuRoute(asyncRoutes).concat([{
+          path: '*',
+          redirect: '/404',
+          hidden: true
+        }])
         commit('SET_ROUTERS', result)
         resolve()
       })
