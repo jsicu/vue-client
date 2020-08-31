@@ -6,7 +6,6 @@
 </template>
 
 <script>
-import list from './routerList'
 
 export default {
   name: 'App',
@@ -25,7 +24,6 @@ export default {
     } else {
       this.getMenuList().then(() => {
         this.$store.dispatch('GenerateRoutes').then(() => {
-          console.log(this.$store.getters.addRouters)
           this.$router.addRoutes(this.$store.getters.addRouters) // 动态添加可访问路由表
         })
       })
@@ -33,12 +31,10 @@ export default {
   },
   methods: {
     async getMenuList() {
-      // console.log(this.$store.getters.addRouters)
-      this.$wsCache.set('menuList', list)
-      // const res = await this.$api.common.getMenuList()
-      // if(res) {
-      //   this.$wsCache.set('menuList', res)
-      // }
+      const res = await this.$api.common.getMenuList()
+      if(res) {
+        this.$wsCache.set('menuList', res)
+      }
     }
   }
 }

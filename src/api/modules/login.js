@@ -12,6 +12,6 @@ export default {
     return post(params, '/security/logout')
   },
   navigation: function(params) {
-    return get(params, '/security/navigation')
+    return get(params, '/commom/navigation')
   }
 }

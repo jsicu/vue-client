@@ -46,7 +46,6 @@ export default {
   },
   computed: {
     visitedViews() {
-      console.log(this.$store.state.tagsView.visitedViews)
       return this.$store.state.tagsView.visitedViews
     },
     routes() {
@@ -100,12 +99,10 @@ export default {
       return tags
     },
     initTags() {
-      // console.log('dsada')
       const affixTags = (this.affixTags = this.filterAffixTags(this.routes))
       for (const tag of affixTags) {
         // Must have tag name
         if (tag.name) {
-          // console.log(tag.name)
           this.$store.dispatch('addVisitedView', tag)
         }
       }

@@ -1,31 +1,32 @@
-import router from "@/router";
-import NProgress from "nprogress"; // progress bar
-import "nprogress/nprogress.css"; // progress bar style
+import router from '@/router'
+import NProgress from 'nprogress' // progress bar
+import 'nprogress/nprogress.css' // progress bar style
 import config from '@/config'
 const { title, show_title } = config
 
-NProgress.configure({ showSpinner: false }); // NProgress configuration
+NProgress.configure({ showSpinner: false }) // NProgress configuration
 
-const whiteList = ["/login"]; // 不重定向白名单
+const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
-  NProgress.start();
-  if (sessionStorage.getItem("userInfo")) {
-    if (to.path === "/login") {
-      next({ path: "/" });
-      NProgress.done();
+  NProgress.start()
+  // if (true) {
+    if (sessionStorage.getItem("userInfo")) {
+    if (to.path === '/login') {
+      next({ path: '/' })
+      NProgress.done()
     } else {
-      next();
+      next()
     }
   } else {
     if (whiteList.indexOf(to.path) !== -1) {
-      next();
+      next()
     } else {
       // window.location.href = 'login.html' // ?redirect=${to.path}
-      next(`/login?redirect=${to.path}`); // 否则全部重定向到登录页
-      NProgress.done();
+      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+      NProgress.done()
     }
   }
-});
+})
 
 router.afterEach(to => {
   setTitle(to)
