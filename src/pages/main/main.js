@@ -10,7 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import '@/styles/index.less' // global css
 import wsCache from '@/cache' // 本地存储
 import config from '@/config' // 引入全局配置
-import '@/icons' // 引入svg图片
+import '@/assets/icons' // 引入svg图片
 import './permission' // permission control
 
 Vue.config.productionTip = false

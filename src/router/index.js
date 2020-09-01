@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
 import Layout from '@/components/layout'
 
 Vue.use(Router)
@@ -71,7 +70,7 @@ export const asyncRoutes = [
         name: 'Home',
         meta: {
           title: '首页',
-          icon: '404',
+          icon: 'home',
           noCache: true,
           affix: true,
           module: 'Home',
@@ -85,8 +84,8 @@ export const asyncRoutes = [
     component: Layout,
     redirect: '/home',
     meta: {
-      title: '企业档案',
-      icon: '404'
+      title: '图片处理',
+      icon: 'picture'
     },
     children: [
       {
@@ -94,8 +93,8 @@ export const asyncRoutes = [
         component: () => import('@mainView/page'),
         name: 'home1',
         meta: {
-          title: '首页测试1',
-          icon: '404',
+          title: '上传下载',
+          icon: 'upload',
           noCache: true,
           module: 'home1',
           request: {}
@@ -106,8 +105,8 @@ export const asyncRoutes = [
         component: () => import('@mainView/test'),
         name: 'home2',
         meta: {
-          title: '首页测试2',
-          icon: '404',
+          title: '头像更换',
+          icon: 'star',
           noCache: true,
           module: 'home2',
           request: {}
