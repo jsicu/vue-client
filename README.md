@@ -32,6 +32,7 @@
 
 ## 结构目录
 
+```js
 ├─.editorconfig
 ├─.eslintignore
 ├─.eslintrc.js
@@ -125,3 +126,5 @@
 ├─public // 页面入口
 |   ├─favicon.ico
 |   └index.html
+
+```
