@@ -24,6 +24,12 @@
   - 如果你觉得每次都要新增注册路由很麻烦，可以**修改src/store/modules/permission.js第29和41行**，这样就不用注册，纯粹使用路由里的地址了
 - publicKey()正常的登录，啥都不用做（默认流程），但是这样就需要后端接口的配合，不然登不进去。
 
+### 使用
+
+这就没啥好说的了，路由在router文件夹下、vuex在store文件夹下，其他的看下面目录机构写的吧
+
+
+
 ## 结构目录
 
 ├─.editorconfig
@@ -34,7 +40,7 @@
 ├─package-lock.json
 ├─package.json
 ├─README.md
-├─vue.config.js
+├─vue.config.js // vue 配置文件
 ├─src
 |  ├─utils // 公共方法
 |  |   ├─clipboard.js
@@ -46,14 +52,13 @@
 |  |   ├─sidebar.less // 侧边栏样式
 |  |   ├─transition.less // 过度样式
 |  |   └variables.less
-|  ├─store
+|  ├─store // vuex
 |  |   ├─getters.js
 |  |   ├─index.js
 |  |   ├─modules
 |  |   |    ├─app.js
-|  |   |    ├─dictData.js
-|  |   |    ├─permission.js
-|  |   |    ├─scanCache.js
+|  |   |    ├─dictData.js // 字典
+|  |   |    ├─permission.js // 路由筛选
 |  |   |    └tagsView.js
 |  ├─router // 路由
 |  |   └index.js
@@ -63,11 +68,11 @@
 |  |   |  ├─main.js
 |  |   |  ├─permission.js
 |  |   |  ├─view
-|  |   |  |  ├─test
+|  |   |  |  ├─test // 路由测试页面
 |  |   |  |  |  └index.vue
 |  |   |  |  ├─page
 |  |   |  |  |  └index.vue
-|  |   |  |  ├─home
+|  |   |  |  ├─home // 首页
 |  |   |  |  |  └index.vue
 |  |   |  |  ├─error-page
 |  |   |  |  |     └404.vue
@@ -77,7 +82,7 @@
 |  |   |   └permission.js
 |  ├─config // 页面配置项
 |  |   └index.js
-|  ├─components
+|  ├─components // 全局公共组件
 |  |     ├─SvgIcon // svg图标组件（可删除）
 |  |     |    └index.vue
 |  |     ├─layout // 外层布局组件
@@ -103,18 +108,17 @@
 |  |     |     └index.vue
 |  |     ├─Breadcrumb
 |  |     |     └index.vue
-|  ├─cache 
+|  ├─cache // seesion浏览器内存配置
 |  |   └index.js
 |  ├─assets // 项目图片
 |  |   ├─img
-|  |   ├─icons
+|  |   ├─icons // svg图片
 |  |   |   ├─index.js
-|  |   |   ├─svgo.yml
 |  |   |   ├─svg
 |  ├─api // api集
-|  |  ├─axios.js
+|  |  ├─axios.js // axios二次封装
 |  |  ├─index.js
-|  |  ├─request.js
+|  |  ├─request.js // http请求处理
 |  |  ├─modules
 |  |  |    ├─commom.js
 |  |  |    └login.js
