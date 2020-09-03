@@ -29,6 +29,7 @@ module.exports = {
     );
     config.resolve.alias
       .set("@components", resolve("src/components")) // key,value自行定义，比如.set('@@', resolve('src/components'))
+      .set("@mixins", resolve("src/mixins"))
       .set("@pages", resolve("src/pages"))
       .set("@mainView", resolve("src/pages/main/view"));
     config.module.rule("svg").uses.clear();

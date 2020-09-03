@@ -1,0 +1,237 @@
+// 覆盖一些element-ui样式
+
+.el-breadcrumb__inner,
+.el-breadcrumb__inner a {
+  font-weight: 400 !important;
+}
+
+.el-upload {
+  input[type="file"] {
+    display: none !important;
+  }
+}
+
+.el-upload__input {
+  display: none;
+}
+
+.cell {
+  .el-tag {
+    margin-right: 0px;
+  }
+}
+
+.small-padding {
+  .cell {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+}
+
+.fixed-width {
+  .el-button--mini {
+    padding: 7px 10px;
+    width: 60px;
+  }
+}
+
+.status-col {
+  .cell {
+    padding: 0 10px;
+    text-align: center;
+
+    .el-tag {
+      margin-right: 0px;
+    }
+  }
+}
+
+// 暂时性解决dialog 问题 https://github.com/ElemeFE/element/issues/2461
+.el-dialog {
+  transform: none;
+  left: 0;
+  position: relative;
+  margin: 0 auto;
+
+  .el-dialog__header {
+    background-color: #304156;
+
+    .el-dialog__title {
+      color: white;
+    }
+
+    i {
+      color: white;
+    }
+  }
+}
+
+// element ui upload
+.upload-container {
+  .el-upload {
+    width: 100%;
+
+    .el-upload-dragger {
+      width: 100%;
+      height: 200px;
+    }
+  }
+}
+
+// dropdown
+.el-dropdown-menu {
+  a {
+    display: block
+  }
+}
+
+// daterange
+.el-date-editor {
+  .el-range-separator {
+    padding: 0 !important;
+  }
+}
+
+.el-table th {
+  //   background: #304156;
+  //   color: white;
+  background: #D8E7FF !important;
+  color: #606266;
+}
+
+.el-table--border tr th {
+  border-color: #EBEEF5;
+  // &>div {
+  //   font-size: 16px;
+  // }
+}
+
+// .el-table .cell {
+//   height: 28px;
+//   line-height: 28px;
+// }
+
+.el-table__header {
+  width: 100% !important;
+}
+
+.el-table__body {
+  width: 100% !important;
+}
+
+.el-table .cell {
+  min-height: 30px;
+  line-height: 30px;
+}
+
+.el-dialog__body {
+  position: relative;
+  padding-bottom: 0;
+}
+
+.el-submenu__title i {}
+
+.el-dialog .el-dialog__header {
+  background-color: #475EEC
+}
+
+/deep/.el-menu-item * {
+  vertical-align: inherit
+}
+
+/deep/.el-button--primary {
+  background-color: #475EEC;
+  border-color: #475EEC;
+}
+
+.ct-btn-search {
+  background-color: #475EEC;
+  border-color: #475EEC;
+
+  &:active,
+  &:hover {
+    background-color: #475EEC;
+    border-color: #475EEC;
+  }
+
+  &:focus {
+    background-color: #475EEC;
+    border-color: #475EEC;
+  }
+}
+
+.ct-btn-reset {
+  background-color: #F1F1F1;
+  border-color: #F1F1F1;
+
+  &:active,
+  &:hover {
+    background-color: #F1F1F1;
+    border-color: #F1F1F1;
+  }
+
+  &:focus {
+    background-color: #F1F1F1;
+    border-color: #F1F1F1;
+  }
+}
+
+.ct-btn-add {
+  background-color: #18AD62;
+  border-color: #18AD62;
+  color: #fff;
+
+  &:active,
+  &:hover {
+    background-color: #18AD62;
+    border-color: #18AD62;
+    color: #fff;
+  }
+
+  &:focus {
+    background-color: #18AD62;
+    border-color: #18AD62;
+    color: #fff;
+  }
+}
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+// form被禁用时样式
+.el-input.is-disabled {
+  .el-input__inner {
+    background-color: #f5f7faa8;
+    border-color: #E4E7ED;
+    color: #949aa5;
+  }
+}
+
+// radio被禁用样式
+.el-radio__input.is-disabled+span.el-radio__label {
+  color: #606266;
+}
+
+//textarea被禁用样式
+.el-textarea.is-disabled .el-textarea__inner {
+  background-color: #f5f7faa8;
+  border-color: #E4E7ED;
+  color: #949aa5;
+}
+// form，label蓝色字体
+.blue-item {
+  .el-form-item__label{
+    color: #475eec;
+  }
+}
+
+// .v-modal {
+//   display: none !important;
+// }
