@@ -26,7 +26,7 @@ const permission = {
   actions: {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
-        // const result = asyncRoutes
+        // const result = asyncRoutes // 使用本地静态路由
         const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
           path: '*',
           redirect: '/404',
@@ -38,8 +38,8 @@ const permission = {
     },
     RenderNewMenu({ commit }) {
       return new Promise(resolve => {
-        // const result = asyncRoutes
-        const result = renderMenuRoute(asyncRoutes).concat([{
+        // const result = asyncRoutes // 使用本地静态路由
+        const result = renderMenuRoute(asyncRoutes).concat([{ // 比对后台返回的菜单数据
           path: '*',
           redirect: '/404',
           hidden: true

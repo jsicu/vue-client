@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     signIn() {
-      // window.location.href = 'main.html'
+      // window.location.href = 'main.html' // 跳过登录
       this.publicKey()
     },
     async publicKey() {
