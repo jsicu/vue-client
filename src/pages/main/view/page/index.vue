@@ -7,15 +7,25 @@
  * @ChildComponents:
  */
 <template>
-  <div class>ceshi</div>
+  <div class>
+    <!-- <div class="com-table-wrap"> -->
+      <comTable :columns="columns" :data="listData" :loading="loading" />
+    <!-- </div> -->
+  </div>
 </template>
 
 <script>
+import tableMixins from '@/mixins/table-mixins'
 export default {
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  mixins: [tableMixins],
   data() {
-    return {}
+    return {
+      columns: [
+        { key: 'code', title: '项目编号' },
+        { key: 'name', title: '项目名称' }
+      ]
+    }
   },
   //监听属性 类似于data概念
   computed: {},
