@@ -1,5 +1,5 @@
 /**
- * Created by PanJiaChen on 16/11/18.
+ * Created by linzq on 20/11/18.
  */
 
 /**
@@ -17,8 +17,8 @@ export function parseTime(time, cFormat) {
   if (typeof time === 'object') {
     date = time
   } else {
-    if ((typeof time === 'string')) {
-      if ((/^[0-9]+$/.test(time))) {
+    if (typeof time === 'string') {
+      if (/^[0-9]+$/.test(time)) {
         // support "1548221490638"
         time = parseInt(time)
       } else {
@@ -28,7 +28,7 @@ export function parseTime(time, cFormat) {
       }
     }
 
-    if ((typeof time === 'number') && (time.toString().length === 10)) {
+    if (typeof time === 'number' && time.toString().length === 10) {
       time = time * 1000
     }
     date = new Date(time)
@@ -45,7 +45,9 @@ export function parseTime(time, cFormat) {
   const time_str = format.replace(/{([ymdhisa])+}/g, (result, key) => {
     const value = formatObj[key]
     // Note: getDay() returns 0 on Sunday
-    if (key === 'a') { return ['日', '一', '二', '三', '四', '五', '六'][value ] }
+    if (key === 'a') {
+      return ['日', '一', '二', '三', '四', '五', '六'][value]
+    }
     return value.toString().padStart(2, '0')
   })
   return time_str
@@ -80,17 +82,7 @@ export function formatTime(time, option) {
   if (option) {
     return parseTime(time, option)
   } else {
-    return (
-      d.getMonth() +
-      1 +
-      '月' +
-      d.getDate() +
-      '日' +
-      d.getHours() +
-      '时' +
-      d.getMinutes() +
-      '分'
-    )
+    return d.getMonth() + 1 + '月' + d.getDate() + '日' + d.getHours() + '时' + d.getMinutes() + '分'
   }
 }
 
@@ -124,7 +116,7 @@ export function byteLength(str) {
     const code = str.charCodeAt(i)
     if (code > 0x7f && code <= 0x7ff) s++
     else if (code > 0x7ff && code <= 0xffff) s += 2
-    if (code >= 0xDC00 && code <= 0xDFFF) i--
+    if (code >= 0xdc00 && code <= 0xdfff) i--
   }
   return s
 }
@@ -224,9 +216,7 @@ export function toggleClass(element, className) {
   if (nameIndex === -1) {
     classString += '' + className
   } else {
-    classString =
-      classString.substr(0, nameIndex) +
-      classString.substr(nameIndex + className.length)
+    classString = classString.substr(0, nameIndex) + classString.substr(nameIndex + className.length)
   }
   element.className = classString
 }
@@ -351,5 +341,29 @@ export function removeClass(ele, cls) {
   if (hasClass(ele, cls)) {
     const reg = new RegExp('(\\s|^)' + cls + '(\\s|$)')
     ele.className = ele.className.replace(reg, ' ')
+  }
+}
+
+/**
+ * @method 文本加密
+ * @for utils/index
+ * @param [String] word 未加密文本
+ * @return 已加密文本
+ * @description publicKey在登录是获取并保存，亦或每次需要加密时后端再传来公玥(待完善)
+ */
+import { JSEncrypt } from 'jsencrypt'
+import wsCache from '../cache' // 本地存储
+
+export function rsaEncrypt(word) {
+  const encrypt = new JSEncrypt()
+  try {
+    const publicKey = wsCache.get('publicKey')
+    // const encrypt = new JSEncrypt()
+    encrypt.setPublicKey(publicKey)
+    return JSON.stringify(word) // 原文返回
+    // return encrypt.encrypt(JSON.stringify(word)); // 加密返回
+  } catch (e) {
+    console.log(e)
+    // window.location.href = 'login.html'
   }
 }
