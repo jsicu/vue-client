@@ -1,15 +1,8 @@
-/** 
- * @Author: 林中奇 
- * @Date: 2020/12/15 
- * @lastAuthor: 
- * @lastChangeDate: 
- * @Explain: 滑块拼图验证 
- * @ChildComponents:
- */
+/** * @Author: 林中奇 * @Date: 2020/12/15 * @lastAuthor: * @lastChangeDate: * @Explain: 滑块拼图验证 * @ChildComponents:
+*/
 <template>
   <div style="position: relative;">
     <!-- puzzle的情况 -->
-
     <div
       v-if="type === '2'"
       class="verify-img-out"
@@ -22,65 +15,61 @@
           <i class="iconfont icon-refresh"></i>
         </div>
         <transition name="tips">
-          <span
-            class="verify-tips"
-            v-if="tipWords"
-            :style="{ 'background-color': tipsBackColor }"
-          >{{ tipWords }}</span>
+          <span class="verify-tips" v-if="tipWords" :style="{ 'background-color': tipsBackColor }">{{ tipWords }}</span>
         </transition>
-        <!-- <div class="verify-gap"
-        :style="{'width': blockSize.width, 'height': blockSize.height, top: top + 'px', left: left + 'px'}"></div>-->
       </div>
     </div>
 
     <!-- 公共部分 -->
     <div
       class="verify-bar-area"
-      :style="{ width: setSize.imgWidth, height: barSize.height, 'line-height': barSize.height }"
+      :style="{
+        width: setSize.imgWidth,
+        height: barSize.height,
+        'line-height': barSize.height,
+        'border-color': sliderBorderColor
+      }"
     >
-      <span class="verify-msg" v-text="text"></span>
+      <span class="verify-msg" v-text="tipsText" />
       <div
         class="verify-left-bar"
         :style="{
           width: leftBarWidth !== undefined ? leftBarWidth : barSize.height,
           height: barSize.height,
-          'border-color': leftBarBorderColor,
+          'border-color': sliderBorderColor,
           transaction: transitionWidth
         }"
+      />
+      <div
+        class="verify-move-block"
+        @touchstart="start"
+        @mousedown="start"
+        :style="{
+          width: barSize.height,
+          height: barSize.height,
+          left: moveBlockLeft,
+          transition: transitionLeft
+        }"
       >
-        <span class="verify-msg" v-text="finishText"></span>
+        <i :class="['verify-icon iconfont', iconClass]" :style="{ color: iconColor }"></i>
         <div
-          class="verify-move-block"
-          @touchstart="start"
-          @mousedown="start"
+          v-if="type === '2'"
+          class="verify-sub-block"
           :style="{
-            width: barSize.height,
-            height: barSize.height,
-            'background-color': moveBlockBackgroundColor,
-            left: moveBlockLeft,
-            transition: transitionLeft
+            width: Math.ceil((parseInt(setSize.imgWidth) * 60) / 310) + 'px',
+            height: setSize.imgHeight,
+            top: '-' + (parseInt(setSize.imgHeight) + space) + 'px',
+            'background-size': setSize.imgWidth + ' ' + setSize.imgHeight
           }"
+          v-show="showImage"
         >
-          <i :class="['verify-icon iconfont', iconClass]" :style="{ color: iconColor }"></i>
-          <div
-            v-if="type === '2'"
-            class="verify-sub-block"
-            :style="{
-              width: Math.ceil((parseInt(setSize.imgWidth) * 60) / 310) + 'px',
-              height: setSize.imgHeight,
-              top: '-' + (parseInt(setSize.imgHeight) + space) + 'px',
-              'background-size': setSize.imgWidth + ' ' + setSize.imgHeight
-            }"
-            v-show="showImage"
-          >
-            <img :src="blockBackImgBase" alt style="width:100%;height:100%;display:block" />
-          </div>
+          <img :src="blockBackImgBase" alt style="width:100%;height:100%;display:block" />
         </div>
       </div>
     </div>
   </div>
 </template>
-<script type="text/babel">
+<script>
 /**
  * VerifySlide
  * @description 滑块
@@ -99,10 +88,6 @@ export default {
     mode: {
       type: String,
       default: 'fixed'
-    },
-    vOffset: {
-      type: Number,
-      default: 5
     },
     space: {
       type: Number,
@@ -139,8 +124,7 @@ export default {
       endMovetime: '', // 移动结束的时间
       tipsBackColor: '', // 提示词的背景颜色
       tipWords: '',
-      text: '',
-      finishText: '',
+      tipsText: '',
       setSize: {
         imgHeight: 0,
         imgWidth: 0,
@@ -154,9 +138,9 @@ export default {
       showImage: true,
       moveBlockLeft: undefined,
       leftBarWidth: undefined,
+      sliderWidth: 0, // 移动距离
       // 移动中样式
-      moveBlockBackgroundColor: undefined,
-      leftBarBorderColor: '#ddd',
+      sliderBorderColor: '#ddd',
       iconColor: undefined,
       iconClass: 'icon-right',
       status: false, //鼠标状态
@@ -176,48 +160,47 @@ export default {
   },
   methods: {
     init() {
-      this.text = this.explain
+      this.tipsText = this.explain
       this.getPictrue()
 
       this.$nextTick(() => {
         let setSize = this.resetSize(this) //重新设置宽度高度
-        console.log(setSize)
         // 监听的问题
         for (let key in setSize) {
           this.$set(this.setSize, key, setSize[key])
         }
-        this.$parent.$emit('ready', this)
+        this.$emit('ready', this)
       })
 
       var _this = this
 
-      window.removeEventListener('touchmove', function (e) {
+      window.removeEventListener('touchmove', function(e) {
         _this.move(e)
       })
-      window.removeEventListener('mousemove', function (e) {
-        _this.move(e)
-      })
-
-      //鼠标松开
-      window.removeEventListener('touchend', function () {
-        _this.end()
-      })
-      window.removeEventListener('mouseup', function () {
-        _this.end()
-      })
-
-      window.addEventListener('touchmove', function (e) {
-        _this.move(e)
-      })
-      window.addEventListener('mousemove', function (e) {
+      window.removeEventListener('mousemove', function(e) {
         _this.move(e)
       })
 
       //鼠标松开
-      window.addEventListener('touchend', function () {
+      window.removeEventListener('touchend', function() {
         _this.end()
       })
-      window.addEventListener('mouseup', function () {
+      window.removeEventListener('mouseup', function() {
+        _this.end()
+      })
+
+      window.addEventListener('touchmove', function(e) {
+        _this.move(e)
+      })
+      window.addEventListener('mousemove', function(e) {
+        _this.move(e)
+      })
+
+      //鼠标松开
+      window.addEventListener('touchend', function() {
+        _this.end()
+      })
+      window.addEventListener('mouseup', function() {
         _this.end()
       })
     },
@@ -227,16 +210,13 @@ export default {
       e = e || window.event
       this.startMoveTime = +new Date() //开始滑动的时间
       if (this.isEnd == false) {
-        this.text = ''
-        this.moveBlockBackgroundColor = '#337ab7'
-        this.leftBarBorderColor = '#337AB7'
         this.iconColor = '#fff'
         e.stopPropagation()
         this.status = true
       }
     },
     //鼠标移动
-    move: function (e) {
+    move: function(e) {
       e = e || window.event
       if (this.status && this.isEnd == false) {
         // if (this.mode == 'pop') {
@@ -250,8 +230,10 @@ export default {
           //兼容PC端
           var x = e.touches[0].pageX
         }
-        // var bar_area_left = this.getLeft(this.barArea);
+
         var bar_area_left = this.barArea.getBoundingClientRect().left
+        // 普通滑动验证
+        this.sliderWidth = this.barArea.getBoundingClientRect().width - this.barArea.getBoundingClientRect().height // 扣除边框2px和滑块40px
         var move_block_left = x - bar_area_left //小方块相对于父元素的left值
 
         if (this.type !== '1') {
@@ -262,10 +244,7 @@ export default {
         } else {
           //普通滑动
           if (move_block_left >= this.barArea.offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3) {
-            this.finishText = '松开验证'
             move_block_left = this.barArea.offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3
-          } else {
-            this.finishText = ''
           }
         }
 
@@ -290,44 +269,40 @@ export default {
           var moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''))
           moveLeftDistance = (moveLeftDistance * 310) / parseInt(this.setSize.imgWidth)
 
-          var captchaVerification = rsaEncrypt(JSON.stringify({ x: moveLeftDistance, y: 5.0 }))
-          let data = {
+          const data = {
             checkJson: rsaEncrypt(moveLeftDistance)
           }
-          
+
           const res = await this.$api.verify.check(data)
           if (res) {
-            this.moveBlockBackgroundColor = '#5cb85c'
-            this.leftBarBorderColor = '#5cb85c'
+            this.sliderBorderColor = '#7ac23c'
             this.iconColor = '#fff'
             this.iconClass = 'icon-check'
             this.showRefresh = false
             this.isEnd = true
+            this.tipsText = '验证成功'
             if (this.mode == 'pop') {
               setTimeout(() => {
-                // this.$parent.clickShow = false
                 this.refresh()
               }, 1500)
             }
-            // this.tipsBackColor = '#5cb85c'
             this.tipsBackColor = 'rgb(92, 184, 92,.5)'
             this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`
             setTimeout(() => {
               this.tipWords = ''
-              // this.$parent.closeBox()
-              this.$parent.$emit('success', { captchaVerification })
+              this.$emit('success', true)
             }, 1000)
           } else {
-            this.moveBlockBackgroundColor = '#d9534f'
-            this.leftBarBorderColor = '#d9534f'
+            this.sliderBorderColor = '#red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
-            // this.tipsBackColor = '#d9534f'
+
             this.tipsBackColor = 'rgb(217, 83, 79,.5)'
-            setTimeout(function () {
+            setTimeout(function() {
+              this.sliderBorderColor = '#ddd'
               _this.refresh()
             }, 1000)
-            this.$emit('error', this)
+            this.$emit('error', false)
             this.tipWords = '验证失败'
             setTimeout(() => {
               this.tipWords = ''
@@ -335,33 +310,37 @@ export default {
           }
         } else {
           // 普通滑动
-          if (
-            parseInt((this.moveBlockLeft || '').replace('px', '')) >=
-            parseInt(this.setSize.barWidth) - parseInt(this.barSize.height) - parseInt(this.vOffset)
-          ) {
-            this.moveBlockBackgroundColor = '#5cb85c'
-            this.leftBarBorderColor = '#5cb85c'
+          let moveWidth = parseInt((this.moveBlockLeft || '').replace('px', ''))
+          if (moveWidth === this.sliderWidth) {
+            this.sliderBorderColor = '#7ac23c'
             this.iconColor = '#fff'
             this.iconClass = 'icon-check'
             this.showRefresh = false
-            this.finishText = '验证成功'
+            this.tipsText = '验证成功'
             this.isEnd = true
-            this.$parent.$emit('success', this)
+            this.$emit('success', true)
           } else {
-            this.finishText = ''
-            this.moveBlockBackgroundColor = '#d9534f'
-            this.leftBarBorderColor = '#d9534f'
+            this.sliderBorderColor = 'red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
             this.isEnd = true
-
-            setTimeout(function () {
-              _this.finishText = ''
-              _this.refresh()
-              _this.isEnd = false
-            }, 400)
-
-            this.$parent.$emit('error', this)
+            this.$emit('error', false)
+            // 滑块归位
+            const time = setInterval(() => {
+              if (moveWidth === 0) {
+                this.isEnd = false
+                this.moveBlockLeft = 0
+                this.sliderBorderColor = '#ddd'
+                this.iconColor = '#fff'
+                this.iconClass = 'icon-right'
+                clearInterval(time)
+              } else {
+                let step = 10
+                moveWidth < 10 ? (step = 1) : (step = 10)
+                moveWidth -= step
+                this.leftBarWidth = this.moveBlockLeft = moveWidth + 'px'
+              }
+            }, 50)
           }
         }
 
@@ -369,18 +348,15 @@ export default {
       }
     },
 
-    refresh: function () {
+    refresh: function() {
       this.showRefresh = true
-      this.finishText = ''
 
       this.transitionLeft = 'left .3s'
       this.moveBlockLeft = 0
-
       this.leftBarWidth = undefined
       this.transitionWidth = 'width .3s'
 
-      this.leftBarBorderColor = '#ddd'
-      this.moveBlockBackgroundColor = '#fff'
+      this.sliderBorderColor = '#ddd'
       this.iconColor = '#000'
       this.iconClass = 'icon-right'
 
@@ -390,19 +366,8 @@ export default {
       setTimeout(() => {
         this.transitionWidth = ''
         this.transitionLeft = ''
-        this.text = this.explain
+        this.tipsText = this.explain
       }, 300)
-    },
-
-    //获取left值
-    getLeft: function (node) {
-      let leftValue = 0
-      while (node) {
-        leftValue += node.offsetLeft
-        node = node.offsetParent
-      }
-      let finalvalue = leftValue
-      return finalvalue
     },
 
     // 请求背景图片和验证图片
@@ -411,8 +376,6 @@ export default {
       if (res) {
         this.backImgBase = res.sliderBG
         this.blockBackImgBase = res.slider
-      } else {
-        this.tipWords = res.repMsg
       }
     }
   },
@@ -427,13 +390,10 @@ export default {
   },
   mounted() {
     // 禁止拖拽
-    this.$el.onselectstart = function () {
+    this.$el.onselectstart = function() {
       return false
     }
   },
-  // created(){
-
-  // },
   i18n: {
     messages: {
       'en-US': {},

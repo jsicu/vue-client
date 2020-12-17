@@ -19,6 +19,8 @@ export default {
   //import引入的组件需要注入到对象中才能使用
   components: { verifyPoint },
   data() {
+
+    
     return {}
   },
   //监听属性 类似于data概念
