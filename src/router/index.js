@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Layout from '@/components/layout'
 
+import image from './modules/image' // 子目录不多暂不单独创建文件
+
 Vue.use(Router)
 
 /**
@@ -80,24 +82,26 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/home',
+    path: '/image',
     component: Layout,
-    redirect: '/home',
+    redirect: '/image',
     meta: {
       title: '图片处理',
       icon: 'picture'
     },
     children: [
       {
-        path: 'home1',
-        component: () => import('@mainView/page'),
-        name: 'home1',
+        path: 'downAndUp',
+        component: () => import('@mainView/image/downAndUp'),
+        name: 'downAndUp',
         meta: {
           title: '上传下载',
           icon: 'upload',
           noCache: true,
-          module: 'home1',
-          request: {}
+          module: 'downAndUp',
+          request: {
+            list: 'list'
+          }
         }
       },
       {
