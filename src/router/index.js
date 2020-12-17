@@ -119,6 +119,41 @@ export const asyncRoutes = [
     ]
   },
   {
+    path: '/verify',
+    component: Layout,
+    redirect: '/verify',
+    meta: {
+      title: '图片处理',
+      icon: 'picture'
+    },
+    children: [
+      {
+        path: 'point',
+        component: () => import('@mainView/verify/point'),
+        name: 'point',
+        meta: {
+          title: '滑块拼图验证',
+          icon: 'upload',
+          noCache: true,
+          module: 'point',
+          request: {}
+        }
+      },
+      {
+        path: 'slider',
+        component: () => import('@mainView/verify/slider'),
+        name: 'slider',
+        meta: {
+          title: '点击验证',
+          icon: 'star',
+          noCache: true,
+          module: 'slider',
+          request: {}
+        }
+      }
+    ]
+  },
+  {
     path: '/test',
     component: Layout,
     redirect: '/test',

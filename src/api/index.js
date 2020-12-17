@@ -1,5 +1,6 @@
 import login from './modules/login'
-import common from './modules/commom'
+import common from './modules/common'
+import verify from './modules/verify'
 import image from './modules/image/index'
 
-export default { login, common, ...image }
+export default { login, common, verify, image }

@@ -6,7 +6,5 @@ const getters = {
   cachedViews: state => state.tagsView.cachedViews,
   permission_routes: state => state.permission.routes,
   addRouters: state => state.permission.addRouters,
-  imgCache: state => state.scanCache.imgCache,
-  // '0001': state => state.dictData['0001'],
 }
 export default getters

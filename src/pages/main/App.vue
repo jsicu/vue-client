@@ -6,11 +6,11 @@
 </template>
 
 <script>
+import list from './routerList'
 
 export default {
   name: 'App',
   created() {
-    // TODO: 如何数据持久化。数据持久化更新不了视图。暂时无解
     if (this.$wsCache.get('newMenu')) {
       this.$store.dispatch('RenderNewMenu').then(() => {
         this.$router.options.routes = this.$store.getters.routers
@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     async getMenuList() {
+      // this.$wsCache.set('menuList', list.list) // 本地静态路由
       const res = await this.$api.common.getMenuList()
       if(res) {
         this.$wsCache.set('menuList', res)
