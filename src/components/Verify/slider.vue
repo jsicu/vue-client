@@ -1,12 +1,18 @@
-/** * @Author: 林中奇 * @Date: 2020/12/15 * @lastAuthor: * @lastChangeDate: * @Explain: 滑块拼图验证 * @ChildComponents:
-*/
+<!-- 
+  /** 
+  * @Author: 林中奇 
+  * @Date: 2020/12/15 
+  * @lastAuthor: 
+  * @lastChangeDate: 
+  * @Explain: 滑块拼图验证 
+  * @ChildComponents:
+  */ -->
 <template>
   <div style="position: relative;">
     <!-- puzzle的情况 -->
     <div
       v-if="type === '2'"
       class="verify-img-out"
-      v-show="showImage"
       :style="{ height: parseInt(setSize.imgHeight) + space + 'px' }"
     >
       <div class="verify-img-panel" :style="{ width: setSize.imgWidth, height: setSize.imgHeight }">
@@ -15,7 +21,11 @@
           <i class="iconfont icon-refresh"></i>
         </div>
         <transition name="tips">
-          <span class="verify-tips" v-if="tipWords" :style="{ 'background-color': tipsBackColor }">{{ tipWords }}</span>
+          <span
+            class="verify-tips"
+            v-if="tipWords"
+            :style="{ 'background-color': tipsBackColor }"
+          >{{ tipWords }}</span>
         </transition>
       </div>
     </div>
@@ -61,7 +71,6 @@
             top: '-' + (parseInt(setSize.imgHeight) + space) + 'px',
             'background-size': setSize.imgWidth + ' ' + setSize.imgHeight
           }"
-          v-show="showImage"
         >
           <img :src="blockBackImgBase" alt style="width:100%;height:100%;display:block" />
         </div>
@@ -135,7 +144,6 @@ export default {
         width: '50px',
         height: '50px'
       },
-      showImage: true,
       moveBlockLeft: undefined,
       leftBarWidth: undefined,
       sliderWidth: 0, // 移动距离
@@ -161,7 +169,7 @@ export default {
   methods: {
     init() {
       this.tipsText = this.explain
-      this.getPictrue()
+      if (this.type !== '1') this.getPictrue()
 
       this.$nextTick(() => {
         let setSize = this.resetSize(this) //重新设置宽度高度
@@ -169,38 +177,38 @@ export default {
         for (let key in setSize) {
           this.$set(this.setSize, key, setSize[key])
         }
-        this.$emit('ready', this)
+        this.$parent.$emit('ready', this)
       })
 
       var _this = this
 
-      window.removeEventListener('touchmove', function(e) {
+      window.removeEventListener('touchmove', function (e) {
         _this.move(e)
       })
-      window.removeEventListener('mousemove', function(e) {
-        _this.move(e)
-      })
-
-      //鼠标松开
-      window.removeEventListener('touchend', function() {
-        _this.end()
-      })
-      window.removeEventListener('mouseup', function() {
-        _this.end()
-      })
-
-      window.addEventListener('touchmove', function(e) {
-        _this.move(e)
-      })
-      window.addEventListener('mousemove', function(e) {
+      window.removeEventListener('mousemove', function (e) {
         _this.move(e)
       })
 
       //鼠标松开
-      window.addEventListener('touchend', function() {
+      window.removeEventListener('touchend', function () {
         _this.end()
       })
-      window.addEventListener('mouseup', function() {
+      window.removeEventListener('mouseup', function () {
+        _this.end()
+      })
+
+      window.addEventListener('touchmove', function (e) {
+        _this.move(e)
+      })
+      window.addEventListener('mousemove', function (e) {
+        _this.move(e)
+      })
+
+      //鼠标松开
+      window.addEventListener('touchend', function () {
+        _this.end()
+      })
+      window.addEventListener('mouseup', function () {
         _this.end()
       })
     },
@@ -216,13 +224,9 @@ export default {
       }
     },
     //鼠标移动
-    move: function(e) {
+    move: function (e) {
       e = e || window.event
       if (this.status && this.isEnd == false) {
-        // if (this.mode == 'pop') {
-        //    this.showImage = true
-        // }
-
         if (!e.touches) {
           //兼容移动端
           var x = e.clientX
@@ -283,26 +287,27 @@ export default {
             this.tipsText = '验证成功'
             if (this.mode == 'pop') {
               setTimeout(() => {
+                this.$parent.clickShow = false
                 this.refresh()
-              }, 1500)
+              }, 1000)
             }
             this.tipsBackColor = 'rgb(92, 184, 92,.5)'
             this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`
             setTimeout(() => {
               this.tipWords = ''
-              this.$emit('success', true)
-            }, 1000)
+              this.$parent.$emit('success', true)
+            }, 1200)
           } else {
             this.sliderBorderColor = '#red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
 
             this.tipsBackColor = 'rgb(217, 83, 79,.5)'
-            setTimeout(function() {
+            setTimeout(function () {
               this.sliderBorderColor = '#ddd'
               _this.refresh()
             }, 1000)
-            this.$emit('error', false)
+            this.$parent.$emit('error', false)
             this.tipWords = '验证失败'
             setTimeout(() => {
               this.tipWords = ''
@@ -318,13 +323,13 @@ export default {
             this.showRefresh = false
             this.tipsText = '验证成功'
             this.isEnd = true
-            this.$emit('success', true)
+            this.$parent.$emit('success', true)
           } else {
             this.sliderBorderColor = 'red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
             this.isEnd = true
-            this.$emit('error', false)
+            this.$parent.$emit('error', false)
             // 滑块归位
             const time = setInterval(() => {
               if (moveWidth === 0) {
@@ -348,7 +353,7 @@ export default {
       }
     },
 
-    refresh: function() {
+    refresh: function () {
       this.showRefresh = true
 
       this.transitionLeft = 'left .3s'
@@ -390,14 +395,8 @@ export default {
   },
   mounted() {
     // 禁止拖拽
-    this.$el.onselectstart = function() {
+    this.$el.onselectstart = function () {
       return false
-    }
-  },
-  i18n: {
-    messages: {
-      'en-US': {},
-      'zh-CN': {}
     }
   }
 }
