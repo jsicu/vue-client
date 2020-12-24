@@ -34,6 +34,17 @@ Vue.use(Router)
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@mainView/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/404',
     component: () => import('@mainView/error-page/404'),
     hidden: true
@@ -42,18 +53,6 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@pages/login/main'),
     hidden: true
-    // },
-    // {
-    //   path: '/',
-    //   component: Layout,
-    //   redirect: '/',
-    //   children: [
-    //     {
-    //       path: '/',
-    //       component: () => import('@pages/main/main'),
-    //       name: 'Main'
-    //     }
-    //   ]
   }
 ]
 /**
