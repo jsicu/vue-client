@@ -32,6 +32,17 @@ Vue.use(Router)
  */
 export const constantRoutes = [
   {
+    path: '/redirect',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: '/redirect/:path(.*)',
+        component: () => import('@mainView/redirect/index')
+      }
+    ]
+  },
+  {
     path: '/404',
     component: () => import('@mainView/error-page/404'),
     hidden: true
@@ -40,18 +51,6 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@pages/login/main'),
     hidden: true
-    // },
-    // {
-    //   path: '/',
-    //   component: Layout,
-    //   redirect: '/',
-    //   children: [
-    //     {
-    //       path: '/',
-    //       component: () => import('@pages/main/main'),
-    //       name: 'Main'
-    //     }
-    //   ]
   }
 ]
 /**
@@ -79,6 +78,7 @@ export const asyncRoutes = [
       }
     ]
   },
+  //? 路由未注册将不显示
   {
     path: '/home',
     component: Layout,
@@ -132,33 +132,7 @@ export const asyncRoutes = [
         }
       }
     ]
-  },
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@mainView/test'),
-        name: 'Tab',
-        meta: { title: 'Tab', icon: 'tab' }
-      }
-    ]
-  },
-  // {
-  //   path: '/icon',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       component: () => import('@/icons/index'),
-  //       name: 'Icons',
-  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
-  //     }
-  //   ]
-  // },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  }
 ]
 
 const createRouter = () =>

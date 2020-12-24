@@ -9,29 +9,30 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routes) => {
-      const arr = generateRoutes(asyncRoutes).filter(v => { // 比对后台返回的菜单数据
-        if (v.children) {
-          return v.children.filter(k => {
-            if (k.children) {
-              v.children = v.children.concat(k.children)
-              delete k.children
-            }
-          })
-        }
-      })
+      const arr = generateRoutes(asyncRoutes)
+        .filter(v => {
+          // 比对后台返回的菜单数据
+          if (v.children) {
+            return v.children.filter(k => {
+              if (k.children) {
+                v.children = v.children.concat(k.children)
+                delete k.children
+              }
+            })
+          }
+        })
+        // ? 添加路由未匹配时的404重定向页面
+        .concat([{ path: '*', redirect: '/404', hidden: true }])
       state.addRouters = arr // 比对后台返回的菜单数据
       state.routes = constantRoutes.concat(routes)
-    },
+    }
   },
   actions: {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
         // const result = asyncRoutes // 使用本地静态路由
-        const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
-          path: '*',
-          redirect: '/404',
-          hidden: true
-        }])
+        // 比对后台返回的菜单数据
+        const result = generateRoutes(asyncRoutes)
         commit('SET_ROUTERS', result)
         resolve()
       })
@@ -39,22 +40,21 @@ const permission = {
     RenderNewMenu({ commit }) {
       return new Promise(resolve => {
         // const result = asyncRoutes // 使用本地静态路由
-        const result = renderMenuRoute(asyncRoutes).concat([{ // 比对后台返回的菜单数据
-          path: '*',
-          redirect: '/404',
-          hidden: true
-        }])
+        // 比对后台返回的菜单数据
+        const result = renderMenuRoute(asyncRoutes)
         commit('SET_ROUTERS', result)
         resolve()
       })
-    },
+    }
   }
 }
 
 function renderMenuRoute(routes, basePath = '/') {
   const res = []
   for (const route of routes) {
-    if (route.hidden) { continue }
+    if (route.hidden) {
+      continue
+    }
     let onlyOneChild = null
     if (route.children && route.children.length === 1) {
       onlyOneChild = path.resolve(route.path, route.children[0].path)
@@ -85,7 +85,9 @@ function generateRoutes(routes, basePath = '/') {
   // console.log(routes)
   for (const route of routes) {
     // skip some route
-    if (route.hidden) { continue }
+    if (route.hidden) {
+      continue
+    }
 
     let onlyOneChild = null
 
@@ -94,7 +96,7 @@ function generateRoutes(routes, basePath = '/') {
     }
 
     let data = null
-    // console.log((wsCache.get('menuList') && wsCache.get('menuList').list) || wsCache.get('newMenu'))
+    // 获取后台路由
     const list = (wsCache.get('menuList') && wsCache.get('menuList').list) || wsCache.get('newMenu')
     // console.log(list)
     for (const item of list) {

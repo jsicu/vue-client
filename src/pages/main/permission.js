@@ -10,7 +10,7 @@ const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
   // if (true) { // 跳过登录验证
-    if (sessionStorage.getItem("userInfo")) {
+  if (sessionStorage.getItem('userInfo')) {
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()

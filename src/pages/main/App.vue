@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- 这是登录成功页 -->
+    <!-- 登录成功页 -->
     <router-view />
   </div>
 </template>
@@ -11,6 +11,8 @@ import list from './routerList'
 export default {
   name: 'App',
   created() {
+    // ? newMenu更新路由的时候使用（比如角色更换），这个案例里还未用到
+    // ? menuList正常的路由，首次登陆时
     if (this.$wsCache.get('newMenu')) {
       this.$store.dispatch('RenderNewMenu').then(() => {
         this.$router.options.routes = this.$store.getters.routers
@@ -33,7 +35,7 @@ export default {
     async getMenuList() {
       // this.$wsCache.set('menuList', list.list) // 本地静态路由
       const res = await this.$api.common.getMenuList()
-      if(res) {
+      if (res) {
         this.$wsCache.set('menuList', res)
       }
     }
