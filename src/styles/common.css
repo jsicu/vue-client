@@ -1,0 +1,33 @@
+/* 公共样式 */
+
+/* 页面标题样式 */
+.base-title {
+  color: #333;
+  font-size: 20px;
+  padding-left: 10px;
+  margin: 0 0 20px;
+  font-weight: bold;
+  border-left: 4px solid #2B6CFC;
+}
+/* 内容页面外层样式 */
+.base-wrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  padding: 18px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #eee;
+}
+.base-wrap .content {
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  padding: 20px 25px;
+  overflow-y: auto;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+/* .el-table--border tr th {
+  border-color: #EBEEF5;
+} */

@@ -398,12 +398,8 @@ export default {
         this.setSort()
       })
     }
-    console.log(this.data)
   },
   methods: {
-    test (a, b) {
-      console.log(a, b)
-    },
     // 多选
     handleSelectionChange (val) {
       this.$emit('select-cell', val)

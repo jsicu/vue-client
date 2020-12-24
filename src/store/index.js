@@ -5,7 +5,6 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import getters from './getters'
 import dictData from './modules/dictData'
-import scanCache from './modules/scanCache'
 
 Vue.use(Vuex)
 
@@ -15,7 +14,6 @@ const store = new Vuex.Store({
     permission,
     tagsView,
     dictData,
-    scanCache
   },
   getters
 })

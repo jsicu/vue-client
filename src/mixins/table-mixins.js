@@ -5,7 +5,7 @@ import ComTable from '@components/ComTable'
 export default {
   components: {
     Search,
-    ComTable,
+    ComTable
     // MutiTable,
     // MoreTable
   },
@@ -78,7 +78,7 @@ export default {
         this.loading = false
       } catch (err) {
         this.loading = false
-        throw (err)
+        throw err
       }
     },
     // 查询
@@ -116,7 +116,7 @@ export default {
       if (title) {
         this.dialogTitle = title
       } else {
-        this.dialogTitle = type === 'add' ? '新增' : (type === 'edit' ? '编辑' : (type === 'select' ? '选择应用' : '详情'))
+        this.dialogTitle = type === 'add' ? '新增' : type === 'edit' ? '编辑' : type === 'select' ? '选择应用' : '详情'
       }
       this.dialogVisible = true
       this.dialogComponent = component || 'Info'

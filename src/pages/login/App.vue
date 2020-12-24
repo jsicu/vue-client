@@ -16,6 +16,7 @@
 
 <script>
 import { JSEncrypt } from 'jsencrypt'
+import { rsaEncrypt } from '@/utils/index.js'
 
 export default {
   name: 'Login',
@@ -29,13 +30,14 @@ export default {
   },
   methods: {
     signIn() {
-      // window.location.href = 'main.html'
+      // window.location.href = 'main.html' // 跳过登录
       this.publicKey()
     },
     async publicKey() {
       // 获取加密公钥
       const res = await this.$api.login.publicKey()
       if (res) {
+        this.$wsCache.set('publicKey', res)
         const encrypt = new JSEncrypt()
         encrypt.setPublicKey(res)
         const encrypted = encrypt.encrypt(this.form.password)

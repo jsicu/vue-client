@@ -13,6 +13,9 @@ import config from '@/config' // 引入全局配置
 import '@/assets/icons' // 引入svg图片
 import './permission' // permission control
 
+// import importDirective from '@/directive' // 自定义指令
+// importDirective(Vue)
+
 Vue.config.productionTip = false
 
 Vue.prototype.$api = api
