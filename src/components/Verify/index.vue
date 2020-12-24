@@ -25,15 +25,16 @@
       </div>
       <div class="verifybox-bottom" :style="{ padding: mode == 'pop' ? '15px' : '0' }">
         <el-row :gutter="10">
-          <el-col :span="componentType === 'VerifyCode' ? 17 : 0">
+          <el-col :span="componentType === 'verifyCode' ? 17 : 0">
             <el-input v-model="code" maxlength="4" placeholder="请输入右侧四位验证码" @input="codeChange" />
           </el-col>
-          <el-col :span="componentType === 'VerifyCode' ? 7 : 24">
+          <el-col :span="componentType === 'verifyCode' ? 7 : 24">
             <!-- 验证码容器 -->
             <components
               v-if="componentType"
               :is="componentType"
               v-bind="$attrs"
+              v-on="$listeners"
               style="padding-top: 1px;"
               :captchaType="captchaType"
               :type="verifyType"
@@ -52,12 +53,17 @@
  * Verify 验证码组件
  * @description 分发验证码使用
  * */
-import VerifyCode from './code'
-import VerifySlide from './slider'
-import VerifyPoints from './point'
+import verifyCode from './code'
+import verifySlider from './slider'
+import verifyPoint from './point'
 
 export default {
   name: 'Verify',
+  components: {
+    verifyCode,
+    verifySlider,
+    verifyPoint
+  },
   props: {
     captchaType: {
       type: String,
@@ -96,16 +102,20 @@ export default {
     /**
      * refresh
      * @description 刷新
-     * */
+     */
     refresh() {
-      if (this.instance.refresh) {
-        this.instance.refresh()
+      if (this.$refs.instance.refresh) {
+        this.$refs.instance.refresh()
       }
     },
+    /**
+     * closeBox
+     * @description 关闭弹窗
+     */
     closeBox() {
       this.clickShow = false
       this.refresh()
-      this.$emit('error', false)
+      this.$emit('close')
     },
     /**
      * checkCode
@@ -113,24 +123,21 @@ export default {
      */
     codeChange(e) {
       if (e.length === 4) {
-        const result = this.instance.checkCode(e)
+        const result = this.$refs.instance.checkCode(e)
         const times = setTimeout(() => {
           if (result) {
             this.$emit('success', true)
           } else {
             this.$emit('error', false)
+            this.code = ''
             this.$message.error('验证失败！')
           }
-          this.code = ''
           clearTimeout(times)
         }, 500)
       }
     }
   },
   computed: {
-    instance() {
-      return this.$refs.instance || {}
-    },
     showBox() {
       if (this.mode == 'pop') {
         return this.clickShow
@@ -143,20 +150,29 @@ export default {
     captchaType: {
       immediate: true,
       handler(captchaType) {
-        switch (captchaType.toString()) {
-          case 'blockPuzzle':
-            this.verifyType = '2'
-            this.componentType = 'VerifySlide'
-            break
-          case 'clickWord':
-            this.verifyType = ''
-            this.componentType = 'VerifyPoints'
-            break
-          case 'graphicCode':
-            this.verifyType = ''
-            this.componentType = 'VerifyCode'
-            break
-        }
+        // 销毁原组件，避免不必要的问题
+        this.componentType = false
+        const times = setTimeout(() => {
+          switch (captchaType.toString()) {
+            case 'verifyPuzzle':
+              this.verifyType = '2'
+              this.componentType = 'verifySlider'
+              break
+            case 'verifySlider':
+              this.verifyType = '1'
+              this.componentType = 'verifySlider'
+              break
+            case 'verifyPoint':
+              this.verifyType = ''
+              this.componentType = 'verifyPoint'
+              break
+            case 'verifyCode':
+              this.verifyType = ''
+              this.componentType = 'verifyCode'
+              break
+          }
+          clearTimeout(times)
+        }, 20)
       }
     },
     visible: {
@@ -168,18 +184,7 @@ export default {
       }
     }
   },
-  components: {
-    VerifyCode,
-    VerifySlide,
-    VerifyPoints
-  },
-  mounted() {
-    // if (this.mode=="pop") {
-    //     document.querySelector(this.containerId).addEventListener('click',()=>{
-    //        this.clickShow = true;
-    //     })
-    // }
-  }
+  mounted() {}
 }
 </script>
 <style lang="less" scoped>
@@ -221,7 +226,7 @@ export default {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1001;
+  z-index: 9999;  // 等级最高
   width: 100%;
   height: 100vh;
   background: rgba(0, 0, 0, 0.3);

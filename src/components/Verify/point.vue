@@ -47,9 +47,7 @@
             top: parseInt(tempPoint.y - 10) + 'px',
             left: parseInt(tempPoint.x - 10) + 'px'
           }"
-        >
-          {{ index + 1 }}
-        </div>
+        >{{ index + 1 }}</div>
       </div>
     </div>
     <div
@@ -58,7 +56,7 @@
         width: setSize.imgWidth,
         color: this.barAreaColor,
         'border-color': this.barAreaBorderColor,
-        'line-height': this.barSize.height
+        'line-height': barHeight
       }"
     >
       <span class="verify-msg">{{ text }}</span>
@@ -106,14 +104,10 @@ export default {
         }
       }
     },
-    barSize: {
-      type: Object,
-      default() {
-        return {
-          width: '310px',
-          height: '40px'
-        }
-      }
+    // 滑块高度
+    barHeight: {
+      type: String,
+      default: '40px'
     }
   },
   data() {
@@ -134,10 +128,15 @@ export default {
       barAreaBorderColor: undefined,
       showRefresh: true,
       bindingClick: true,
-      original:{
-				width: 310,
-				height: 155
-			} // 图像原始尺寸
+      original: {
+        width: 310,
+        height: 155
+      }, // 图像原始尺寸
+      // 单位判断使用util.js
+      barSize: {
+        width: '310px',
+        height: '40px'
+      }
     }
   },
   computed: {
@@ -155,8 +154,7 @@ export default {
 
       this.$nextTick(() => {
         this.setSize = this.resetSize(this) //重新设置宽度高度
-        // this.refresh()
-        this.$parent.$emit('ready', this)
+        this.$emit('ready', this)
       })
     },
     canvasClick(e) {
@@ -186,9 +184,9 @@ export default {
                 this.refresh()
               }, 1500)
             }
-            this.$parent.$emit('success', true)
+            this.$emit('success', true)
           } else {
-            this.$parent.$emit('error', false)
+            this.$emit('error', false)
             this.barAreaColor = '#d9534f'
             this.barAreaBorderColor = '#d9534f'
             this.text = '验证失败'
@@ -204,17 +202,17 @@ export default {
       }
     },
     //获取坐标
-    getMousePos: function(obj, e) {
+    getMousePos: function (obj, e) {
       const x = e.offsetX
       const y = e.offsetY
       return { x, y }
     },
     //创建坐标点
-    createPoint: function(pos) {
+    createPoint: function (pos) {
       this.tempPoints.push(Object.assign({}, pos))
       return ++this.num
     },
-    refresh: function() {
+    refresh: function () {
       this.tempPoints.splice(0, this.tempPoints.length)
       this.barAreaColor = '#000'
       this.barAreaBorderColor = '#ddd'
@@ -225,13 +223,12 @@ export default {
       this.num = 1
 
       this.getPictrue()
-      this.text = '验证失败'
       this.showRefresh = true
     },
 
     // 请求背景图片和验证图片
     async getPictrue() {
-      const res = await this.$api.verify.getPicture({type: 1})
+      const res = await this.$api.verify.getPicture({ type: 1 })
       if (res) {
         this.pointBackImgBase = res.bgCanvas
         this.text = '请依次点击【' + res.words + '】'
@@ -259,7 +256,7 @@ export default {
   },
   mounted() {
     // 禁止拖拽
-    this.$el.onselectstart = function() {
+    this.$el.onselectstart = function () {
       return false
     }
   }

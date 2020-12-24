@@ -17,6 +17,7 @@
   padding: 18px;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  background-color: #eee;
 }
 .base-wrap .content {
   width: 100%;

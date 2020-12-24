@@ -1,7 +1,6 @@
 /* 验证码细胞池 */
 
 export const pool = [
-	'',
 	'A', 'a',
 	'B', 'b',
 	'C', 'c',

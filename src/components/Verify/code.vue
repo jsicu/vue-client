@@ -11,7 +11,7 @@
 <script>
 import { pool } from './codeJson'
 export default {
-  name: 'SIdentify',
+  name: 'VerifyCode',
   props: {
     // 字体最小值
     fontSizeMin: {
@@ -45,7 +45,6 @@ export default {
       contentWidth: 90
     }
   },
-  created() {},
   methods: {
     // 生成一个随机数
     randomNum(min, max) {
@@ -59,7 +58,7 @@ export default {
       return 'rgb(' + r + ',' + g + ',' + b + ')'
     },
     drawPic() {
-      let canvas = document.getElementById(this.canvasId)
+      const canvas = document.getElementById(this.canvasId)
       let ctx = canvas.getContext('2d')
       ctx.textBaseline = 'bottom'
       // 绘制背景
@@ -68,7 +67,8 @@ export default {
       // 绘制文字
       let str = ''
       for (let i = 0; i < 4; i++) {
-        const text = pool[this.randomNum(0, pool.length - 1)]
+        const num = this.randomNum(0, pool.length - 1)
+        const text = pool[num]
         this.drawText(ctx, text, i)
         str += text
       }

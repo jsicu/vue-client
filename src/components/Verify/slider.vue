@@ -35,8 +35,8 @@
       class="verify-bar-area"
       :style="{
         width: setSize.imgWidth,
-        height: barSize.height,
-        'line-height': barSize.height,
+        height: barHeight,
+        'line-height': barHeight,
         'border-color': sliderBorderColor
       }"
     >
@@ -44,8 +44,8 @@
       <div
         class="verify-left-bar"
         :style="{
-          width: leftBarWidth !== undefined ? leftBarWidth : barSize.height,
-          height: barSize.height,
+          width: leftBarWidth !== undefined ? leftBarWidth : barHeight,
+          height: barHeight,
           'border-color': sliderBorderColor,
           transaction: transitionWidth
         }"
@@ -55,8 +55,8 @@
         @touchstart="start"
         @mousedown="start"
         :style="{
-          width: barSize.height,
-          height: barSize.height,
+          width: barHeight,
+          height: barHeight,
           left: moveBlockLeft,
           transition: transitionLeft
         }"
@@ -115,14 +115,10 @@ export default {
         }
       }
     },
-    barSize: {
-      type: Object,
-      default() {
-        return {
-          width: '310px',
-          height: '40px'
-        }
-      }
+    // 滑块高度
+    barHeight: {
+      type: String,
+      default: '40px'
     }
   },
   data() {
@@ -140,12 +136,17 @@ export default {
         barHeight: 0,
         barWidth: 0
       },
+      // 单位判断使用util.js
+      barSize: {
+        width: '310px',
+        height: '40px'
+      },
       blockSize: {
         width: '50px',
         height: '50px'
       },
-      moveBlockLeft: undefined,
-      leftBarWidth: undefined,
+      moveBlockLeft: 0,
+      leftBarWidth: 0,
       sliderWidth: 0, // 移动距离
       // 移动中样式
       sliderBorderColor: '#ddd',
@@ -155,9 +156,11 @@ export default {
       isEnd: false, //是够验证完成
       showRefresh: true,
       transitionLeft: '',
-      transitionWidth: ''
+      transitionWidth: '',
+      distance: 0 // 滑块复位距离比较
     }
   },
+  created() {},
   computed: {
     barArea() {
       return this.$el.querySelector('.verify-bar-area')
@@ -169,7 +172,7 @@ export default {
   methods: {
     init() {
       this.tipsText = this.explain
-      if (this.type !== '1') this.getPictrue()
+      if (this.type !== '1') this.getPicture()
 
       this.$nextTick(() => {
         let setSize = this.resetSize(this) //重新设置宽度高度
@@ -177,26 +180,10 @@ export default {
         for (let key in setSize) {
           this.$set(this.setSize, key, setSize[key])
         }
-        this.$parent.$emit('ready', this)
+        this.$emit('ready', this)
       })
 
-      var _this = this
-
-      window.removeEventListener('touchmove', function (e) {
-        _this.move(e)
-      })
-      window.removeEventListener('mousemove', function (e) {
-        _this.move(e)
-      })
-
-      //鼠标松开
-      window.removeEventListener('touchend', function () {
-        _this.end()
-      })
-      window.removeEventListener('mouseup', function () {
-        _this.end()
-      })
-
+      const _this = this
       window.addEventListener('touchmove', function (e) {
         _this.move(e)
       })
@@ -237,46 +224,47 @@ export default {
 
         var bar_area_left = this.barArea.getBoundingClientRect().left
         // 普通滑动验证
-        this.sliderWidth = this.barArea.getBoundingClientRect().width - this.barArea.getBoundingClientRect().height // 扣除边框2px和滑块40px
-        var move_block_left = x - bar_area_left //小方块相对于父元素的left值
-
+        this.sliderWidth = this.barArea.getBoundingClientRect().width - this.barArea.getBoundingClientRect().height // 扣除边框2px和滑块40px 270
+        let move_block_left = x - bar_area_left //小方块相对于父元素的left值
         if (this.type !== '1') {
-          //图片滑动
-          if (move_block_left >= this.barArea.offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2) {
-            move_block_left = this.barArea.offsetWidth - parseInt(parseInt(this.blockSize.width) / 2) - 2
+          // 图片滑动 2为边框2px
+          if (
+            move_block_left >=
+            this.barArea.offsetWidth - Math.ceil((parseInt(this.setSize.imgWidth) * 60) / 620) - 2
+          ) {
+            move_block_left = this.barArea.offsetWidth - Math.ceil((parseInt(this.setSize.imgWidth) * 60) / 620) - 2
           }
         } else {
-          //普通滑动
-          if (move_block_left >= this.barArea.offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3) {
-            move_block_left = this.barArea.offsetWidth - parseInt(parseInt(this.barSize.height) / 2) + 3
+          // 普通滑动
+          if (move_block_left >= this.barArea.offsetWidth - parseInt(parseInt(this.barHeight) / 2) - 2) {
+            move_block_left = this.barArea.offsetWidth - parseInt(parseInt(this.barHeight) / 2) - 2
           }
         }
 
-        if (move_block_left <= 0) {
-          move_block_left = parseInt(parseInt(this.blockSize.width) / 2)
+        // 左边超出时
+        if (move_block_left <= parseInt(parseInt(this.barHeight) / 2)) {
+          move_block_left = parseInt(parseInt(this.barHeight) / 2)
         }
 
-        //拖动后小方块的left值
-        this.moveBlockLeft = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px'
-        this.leftBarWidth = move_block_left - parseInt(parseInt(this.blockSize.width) / 2) + 'px'
+        // 拖动后小方块的left值
+        this.moveBlockLeft = move_block_left - parseInt(parseInt(this.barHeight) / 2) + 'px'
+        this.leftBarWidth = move_block_left - parseInt(parseInt(this.barHeight) / 2) + 'px'
       }
     },
 
     // 鼠标松开
     async end() {
       this.endMovetime = +new Date()
-      var _this = this
       // 判断是否重合
       if (this.status && this.isEnd == false) {
         if (this.type !== '1') {
           // 图片滑动
-          var moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''))
-          moveLeftDistance = (moveLeftDistance * 310) / parseInt(this.setSize.imgWidth)
+          let moveLeftDistance = parseInt((this.moveBlockLeft || '').replace('px', ''))
+          this.distance = moveLeftDistance = (moveLeftDistance * 310) / parseInt(this.setSize.imgWidth)
 
           const data = {
             checkJson: rsaEncrypt(moveLeftDistance)
           }
-
           const res = await this.$api.verify.check(data)
           if (res) {
             this.sliderBorderColor = '#7ac23c'
@@ -295,57 +283,49 @@ export default {
             this.tipWords = `${((this.endMovetime - this.startMoveTime) / 1000).toFixed(2)}s验证成功`
             setTimeout(() => {
               this.tipWords = ''
-              this.$parent.$emit('success', true)
-            }, 1200)
+              this.$emit('success', true)
+            }, 800)
           } else {
-            this.sliderBorderColor = '#red'
+            this.sliderBorderColor = 'red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
 
             this.tipsBackColor = 'rgb(217, 83, 79,.5)'
-            setTimeout(function () {
-              this.sliderBorderColor = '#ddd'
-              _this.refresh()
-            }, 1000)
-            this.$parent.$emit('error', false)
-            this.tipWords = '验证失败'
             setTimeout(() => {
-              this.tipWords = ''
-            }, 1000)
+              this.sliderBorderColor = '#ddd'
+              this.reset()
+              this.refresh()
+            }, 500)
+            this.$emit('error', false)
+            this.tipWords = '验证失败'
           }
         } else {
           // 普通滑动
-          let moveWidth = parseInt((this.moveBlockLeft || '').replace('px', ''))
-          if (moveWidth === this.sliderWidth) {
+          this.distance = parseInt((this.moveBlockLeft || '').replace('px', ''))
+          console.log(this.distance)
+          if (this.distance === this.sliderWidth) {
             this.sliderBorderColor = '#7ac23c'
             this.iconColor = '#fff'
             this.iconClass = 'icon-check'
             this.showRefresh = false
             this.tipsText = '验证成功'
             this.isEnd = true
-            this.$parent.$emit('success', true)
+            this.$parent.clickShow = false
+            this.$emit('success', true)
+            // 未确定重置过程
+            // const times = setTimeout(() => {
+            //   this.refresh()
+            //   clearTimeout(times)
+            // }, 50);
           } else {
             this.sliderBorderColor = 'red'
             this.iconColor = '#fff'
             this.iconClass = 'icon-close'
             this.isEnd = true
-            this.$parent.$emit('error', false)
-            // 滑块归位
-            const time = setInterval(() => {
-              if (moveWidth === 0) {
-                this.isEnd = false
-                this.moveBlockLeft = 0
-                this.sliderBorderColor = '#ddd'
-                this.iconColor = '#fff'
-                this.iconClass = 'icon-right'
-                clearInterval(time)
-              } else {
-                let step = 10
-                moveWidth < 10 ? (step = 1) : (step = 10)
-                moveWidth -= step
-                this.leftBarWidth = this.moveBlockLeft = moveWidth + 'px'
-              }
-            }, 50)
+            setTimeout(() => {
+              this.reset()
+            }, 800)
+            this.$emit('error', false)
           }
         }
 
@@ -353,30 +333,64 @@ export default {
       }
     },
 
-    refresh: function () {
-      this.showRefresh = true
-
-      this.transitionLeft = 'left .3s'
+    /**
+     * refresh
+     * @description 刷新
+     */
+    refresh() {
+      this.leftBarWidth = 0
+      this.isEnd = false
       this.moveBlockLeft = 0
-      this.leftBarWidth = undefined
-      this.transitionWidth = 'width .3s'
-
       this.sliderBorderColor = '#ddd'
-      this.iconColor = '#000'
+      this.iconColor = '#fff'
       this.iconClass = 'icon-right'
-
-      this.getPictrue()
+      this.showRefresh = true
+      this.transitionLeft = 'left .3s'
+      this.transitionWidth = 'width .3s'
       this.isEnd = false
 
       setTimeout(() => {
+        if (this.type !== '1') this.getPicture()
+        this.tipWords = ''
         this.transitionWidth = ''
         this.transitionLeft = ''
         this.tipsText = this.explain
-      }, 300)
+      }, 500)
+    },
+
+    /**
+     * blockCenter
+     * ! 未使用等想优化了再来搞
+     * @description 块居中
+     */
+    // blockCenter() {
+    //   return Math.ceil(((parseInt(this.setSize.imgWidth) * 60) / 310 - parseInt(this.barHeight)) / 2)
+    // },
+
+    /**
+     * reset
+     * @description 滑块归位
+     */
+    reset() {
+      const time = setInterval(() => {
+        if (parseInt(this.distance) === 0 || !this.distance) {
+          this.isEnd = false
+          this.moveBlockLeft = 0
+          this.sliderBorderColor = '#ddd'
+          this.iconColor = '#fff'
+          this.iconClass = 'icon-right'
+          clearInterval(time)
+        } else {
+          let step = 20
+          this.distance < 20 ? (step = 1) : (step = 20)
+          this.distance -= step
+          this.leftBarWidth = this.moveBlockLeft = this.distance + 'px'
+        }
+      }, 20)
     },
 
     // 请求背景图片和验证图片
-    async getPictrue() {
+    async getPicture() {
       const res = await this.$api.verify.getPicture()
       if (res) {
         this.backImgBase = res.sliderBG
@@ -398,6 +412,23 @@ export default {
     this.$el.onselectstart = function () {
       return false
     }
+  },
+  destroyed() {
+    // 鼠标移动
+    window.removeEventListener('touchmove', function (e) {
+      this.move(e)
+    })
+    window.removeEventListener('mousemove', function (e) {
+      this.move(e)
+    })
+
+    // 鼠标松开
+    window.removeEventListener('touchend', function () {
+      this.end()
+    })
+    window.removeEventListener('mouseup', function () {
+      this.end()
+    })
   }
 }
 </script>
