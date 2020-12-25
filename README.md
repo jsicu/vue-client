@@ -1,130 +1,35 @@
-# basic-bramework分支
+# vue-client
 
 
 
-## 干净的[vue-element-*admin*](https://github.com/PanJiaChen/vue-element-admin) 框架
+基于elementUI的前端管理平台，对应后台服务为：[koa-server](https://github.com/lzq741167479/koa-server)
 
 
 
-一个可以直接使用的基于vue的后台管理项目，只保留了layout布局、登录两部分，其余全部移除。这样在做后台管理系统项目是就可以直接拿来使用了
+### 分支介绍
+
+- master：主分支，阶段开发完成后合并到主分支，稳定可靠
+- basic-framework：干净的基于[vue-element-*admin*](https://github.com/PanJiaChen/vue-element-admin) 的前端管理项目
+- cloud_desktop：云桌面分支，正在开发的分支，经常变动
+- personal_computer：个人笔记本分支，正在开发的分支，经常变动
 
 
 
-## 使用介绍
+### 使用介绍
 
-### 登录
+``` js
+# 克隆项目
+git clone https://github.com/lzq741167479/vue-client.git
 
-登录入口配置在vue.comfig配置，文件地址=》[src/page/login](https://github.com/lzq741167479/vue-client/tree/basic-framework/src/pages/login) 
+# 进入项目目录
+cd 项目路径
 
-在src/page/login/App.vue文件里的signIn方法决定登录效果。有两种方式：
+# 安装依赖
+npm install
 
-- window.location.href是跳过后端认证的登录（已注释）。此时需要修改两个地方：
-  - **修改src/page/main/permission.js第12行**，否则进入主页判断session没有userInfo数据就会跳转回登录页；
-  - **修改src/page/main/App.vue第34行**，这样使用本地的模拟注册路由，否则进入主页只会有空白页面，啥也没有。***注意***：此时你新增一个页面后就要在src/page/main/routeList.js里注册下，否则目录不会显示
-  - 如果你觉得每次都要新增注册路由很麻烦，可以**修改src/store/modules/permission.js第29和41行**，这样就不用注册，纯粹使用路由里的地址了
-- publicKey()正常的登录，啥都不用做（默认流程），但是这样就需要后端接口的配合，不然登不进去。
-
-### 使用
-
-这就没啥好说的了，路由在router文件夹下、vuex在store文件夹下，其他的看下面目录机构写的吧
-
-
-
-## 结构目录
-
-```js
-├─.editorconfig
-├─.eslintignore
-├─.eslintrc.js
-├─.prettierrc
-├─babel.config.js
-├─package-lock.json
-├─package.json
-├─README.md
-├─vue.config.js // vue 配置文件
-├─src
-|  ├─utils // 公共方法
-|  |   ├─clipboard.js
-|  |   ├─get-page-title.js
-|  |   ├─index.js
-|  |   └validate.js
-|  ├─styles // 公共样式
-|  |   ├─index.less
-|  |   ├─sidebar.less // 侧边栏样式
-|  |   ├─transition.less // 过度样式
-|  |   └variables.less
-|  ├─store // vuex
-|  |   ├─getters.js
-|  |   ├─index.js
-|  |   ├─modules
-|  |   |    ├─app.js
-|  |   |    ├─dictData.js // 字典
-|  |   |    ├─permission.js // 路由筛选
-|  |   |    └tagsView.js
-|  ├─router // 路由
-|  |   └index.js
-|  ├─pages
-|  |   ├─main // 主页
-|  |   |  ├─App.vue
-|  |   |  ├─main.js
-|  |   |  ├─permission.js
-|  |   |  ├─view
-|  |   |  |  ├─test // 路由测试页面
-|  |   |  |  |  └index.vue
-|  |   |  |  ├─page
-|  |   |  |  |  └index.vue
-|  |   |  |  ├─home // 首页
-|  |   |  |  |  └index.vue
-|  |   |  |  ├─error-page
-|  |   |  |  |     └404.vue
-|  |   ├─login // 登录页
-|  |   |   ├─App.vue
-|  |   |   ├─main.js
-|  |   |   └permission.js
-|  ├─config // 页面配置项
-|  |   └index.js
-|  ├─components // 全局公共组件
-|  |     ├─SvgIcon // svg图标组件（可删除）
-|  |     |    └index.vue
-|  |     ├─layout // 外层布局组件
-|  |     |   ├─index.vue
-|  |     |   ├─mixin
-|  |     |   |   └ResizeHandler.js
-|  |     |   ├─components
-|  |     |   |     ├─AppMain.vue
-|  |     |   |     ├─index.js
-|  |     |   |     ├─Navbar.vue
-|  |     |   |     ├─TagsView
-|  |     |   |     |    ├─index.vue
-|  |     |   |     |    └ScrollPane.vue
-|  |     |   |     ├─Sidebar
-|  |     |   |     |    ├─index.vue
-|  |     |   |     |    ├─Item.vue
-|  |     |   |     |    ├─Link.vue
-|  |     |   |     |    ├─Logo.vue
-|  |     |   |     |    └SidebarItem.vue
-|  |     |   |     ├─Settings
-|  |     |   |     |    └index.vue
-|  |     ├─Hamburger 
-|  |     |     └index.vue
-|  |     ├─Breadcrumb
-|  |     |     └index.vue
-|  ├─cache // seesion浏览器内存配置
-|  |   └index.js
-|  ├─assets // 项目图片
-|  |   ├─img
-|  |   ├─icons // svg图片
-|  |   |   ├─index.js
-|  |   |   ├─svg
-|  ├─api // api集
-|  |  ├─axios.js // axios二次封装
-|  |  ├─index.js
-|  |  ├─request.js // http请求处理
-|  |  ├─modules
-|  |  |    ├─commom.js
-|  |  |    └login.js
-├─public // 页面入口
-|   ├─favicon.ico
-|   └index.html
-
+# 运行
+npm run serve
 ```
+
+### 
+
