@@ -9,16 +9,20 @@ const permission = {
   },
   mutations: {
     SET_ROUTERS: (state, routes) => {
-      const arr = generateRoutes(asyncRoutes).filter(v => { // 比对后台返回的菜单数据
-        if (v.children) {
-          return v.children.filter(k => {
-            if (k.children) {
-              v.children = v.children.concat(k.children)
-              delete k.children
-            }
-          })
-        }
-      })
+      const arr = generateRoutes(asyncRoutes)
+        .filter(v => {
+          // 比对后台返回的菜单数据
+          if (v.children) {
+            return v.children.filter(k => {
+              if (k.children) {
+                v.children = v.children.concat(k.children)
+                delete k.children
+              }
+            })
+          }
+        })
+        // ? 添加路由未匹配时的404重定向页面
+        .concat([{ path: '*', redirect: '/404', hidden: true }])
       state.addRouters = arr // 比对后台返回的菜单数据
       state.routes = constantRoutes.concat(routes)
     },
@@ -27,11 +31,7 @@ const permission = {
     GenerateRoutes({ commit }) {
       return new Promise(resolve => {
         // const result = asyncRoutes // 使用本地静态路由
-        const result = generateRoutes(asyncRoutes).concat([{ // 比对后台返回的菜单数据
-          path: '*',
-          redirect: '/404',
-          hidden: true
-        }])
+        const result = generateRoutes(asyncRoutes) // 比对后台返回的菜单数据
         commit('SET_ROUTERS', result)
         resolve()
       })
@@ -39,11 +39,7 @@ const permission = {
     RenderNewMenu({ commit }) {
       return new Promise(resolve => {
         // const result = asyncRoutes // 使用本地静态路由
-        const result = renderMenuRoute(asyncRoutes).concat([{ // 比对后台返回的菜单数据
-          path: '*',
-          redirect: '/404',
-          hidden: true
-        }])
+        const result = renderMenuRoute(asyncRoutes) // 比对后台返回的菜单数据
         commit('SET_ROUTERS', result)
         resolve()
       })
