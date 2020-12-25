@@ -1,37 +1,50 @@
-/**
- * @Author: 林中奇
- * @Date: 2020/07/09
- * @lastAuthor:
- * @lastChangeDate:
- * @Explain: 测试
- * @ChildComponents:
- */
+<!--
+  /**
+   * @Author: 林中奇
+   * @Date: 2020/12/25
+   * @lastAuthor:
+   * @lastChangeDate:
+   * @description:
+   * @ChildComponents:
+   */ -->
 <template>
-  <div>测试</div>
+  <div style="margin: 100px">
+    <el-button type="text" @click="visible = true">点击打开验证</el-button>
+    <verify
+      :visible="visible"
+      @success="success"
+      @error="error"
+      @ready="ready"
+      @close="visible = false"
+    />
+  </div>
 </template>
 
 <script>
+import verify from '@components/Verify'
+
 export default {
+  name: 'Verify',
   //import引入的组件需要注入到对象中才能使用
-  components: {},
+  components: { verify },
   data() {
-    return {}
+    return {
+      visible: false
+    }
   },
-  //监听属性 类似于data概念
-  computed: {},
   watch: {},
   //方法集合
-  methods: {},
-  created() {},
-  mounted() {},
-  beforeCreate() {},
-  beforeMount() {},
-  beforeUpdate() {},
-  updated() {},
-  beforeDestroy() {},
-  destroyed() {}
+  methods: {
+    success(data) {
+      this.$message('验证成功！')
+      this.visible = false
+    },
+    error(data) {
+      console.log('验证失败')
+    },
+    ready() {
+      console.log('ready')
+    }
+  }
 }
 </script>
-<style lang='less' scoped>
-// @import url();
-</style>
