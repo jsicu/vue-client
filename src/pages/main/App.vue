@@ -31,7 +31,7 @@ export default {
   },
   methods: {
     async getMenuList() {
-      // this.$wsCache.set('menuList', list.list) // 本地静态路由
+      // this.$wsCache.set('menuList', list) // 本地静态路由
       const res = await this.$api.common.getMenuList()
       if(res) {
         this.$wsCache.set('menuList', res)
