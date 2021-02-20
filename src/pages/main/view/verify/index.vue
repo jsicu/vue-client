@@ -29,7 +29,6 @@
         </div>弹出式验证：
         <el-button type="text" @click="click">点击打开验证</el-button>
         <verify
-          :captchaType="moduleName"
           :visible="visible"
           barHeight="30px"
           :imgSize="imgSize"
@@ -38,6 +37,11 @@
           @ready="ready"
           @close="visible = false"
         />
+        <br />
+        <br />
+        <div>
+          <strong>注意：</strong>拼图验证和点击验证的普通模式第一次必定失败是由于验证接口设计如此（只保存最近一次的验证数据），并非验证组件问题
+        </div>
       </div>
     </div>
   </div>
@@ -110,7 +114,7 @@ export default {
     float: left;
     background-color: #fff;
     box-shadow: 2px 1px 3px rgba(0, 0, 0, 0.3);
-    padding: 10px 0;
+    padding: 12px 0;
   }
 
   .pro-content {

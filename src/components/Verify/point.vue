@@ -80,12 +80,12 @@ export default {
       type: String,
       default: 'fixed'
     },
-    //默认的文字数量
+    // 默认的文字数量
     defaultNum: {
       type: Number,
       default: 7
     },
-    //校对的文字数量
+    // 校对的文字数量
     checkNum: {
       type: Number,
       default: 3
