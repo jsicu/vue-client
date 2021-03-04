@@ -12,6 +12,8 @@ import wsCache from '@/cache' // 本地存储
 import config from '@/config' // 引入全局配置
 import '@/assets/icons' // 引入svg图片
 import './permission' // permission control
+import dataV from '@jiaminghi/data-view'
+import * as echarts from 'echarts'
 
 // import importDirective from '@/directive' // 自定义指令
 // importDirective(Vue)
@@ -21,7 +23,10 @@ Vue.config.productionTip = false
 Vue.prototype.$api = api
 Vue.prototype.$wsCache = wsCache
 Vue.prototype.$config = config
+Vue.prototype.$echarts = echarts
+
 Vue.use(ElementUI)
+Vue.use(dataV)
 
 /* eslint-disable no-new */
 new Vue({

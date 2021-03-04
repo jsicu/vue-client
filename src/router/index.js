@@ -155,14 +155,14 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/tab',
+    path: '/',
     component: Layout,
     children: [
       {
-        path: 'index',
-        component: () => import('@mainView/test'),
-        name: 'Tab',
-        meta: { title: 'Tab', icon: 'tab' }
+        path: '/bigScreen',
+        component: () => import('@mainView/bigScreen'),
+        name: 'bigScreen',
+        meta: { title: 'bigScreen', icon: 'home' }
       }
     ]
   },
