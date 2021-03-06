@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-03 16:15:05
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-03 16:52:40
+ * @LastEditTime: 2021-03-05 17:07:39
  * @Description: 趋势图
 -->
 <template>
@@ -16,16 +16,10 @@ export default {
     return {
       resizeTimer: null,
       myChart: null,
-      colors: ['#5470C6', '#91CC75', '#EE6666']
-    }
-  },
-  methods: {
-    init() {
-      let myChart = this.$echarts.init(this.$refs.trendCharts)
-      this.myChart = myChart
-      myChart.setOption({
+      colors: ['#5470C6', '#91CC75', '#EE6666'],
+      options: {
         backgroundColor: 'rgba(56,155,255,0)',
-        color: this.colors,
+        color: ['#5470C6', '#91CC75', '#EE6666'],
 
         tooltip: {
           trigger: 'axis',
@@ -34,7 +28,7 @@ export default {
           }
         },
         legend: {
-          data: ['蒸发量', '平均温度', '平均温度1'],
+          data: ['景点总数', '游客数量'],
           selectedMode: false
         },
         xAxis: [
@@ -43,61 +37,69 @@ export default {
             axisTick: {
               alignWithLabel: true
             },
-            data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
+            data: ['2015', '2016', '2017', '2018', '2019', '2020']
           }
         ],
         yAxis: [
           {
             type: 'value',
             name: '游客数量(万人)',
-            min: 0,
-            max: 250,
+            // min: 0,
+            // max: 250,
             position: 'left',
             axisLine: {
               show: true,
               lineStyle: {
-                color: this.colors[0]
+                color: '#5470C6'
               }
             }
           },
           {
             type: 'value',
             name: '景点总数(家)',
-            min: 0,
-            max: 25,
+            // min: 0,
+            // max: 25,
             position: 'right',
             axisLine: {
               show: true,
               lineStyle: {
-                color: this.colors[2]
+                color: '#EE6666'
               }
             }
           }
         ],
         series: [
           {
-            name: '蒸发量',
+            name: '游客数量',
             type: 'bar',
-            data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
+            data: []
           },
           {
-            name: '平均温度',
+            name: '景点总数',
             type: 'line',
             yAxisIndex: 1,
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-          },
-          {
-            name: '平均温度1',
-            type: 'line',
-            yAxisIndex: 1,
-            data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 13.0, 7.2]
+            data: []
           }
         ]
-      })
+      }
+    }
+  },
+  methods: {
+    async getData() {
+      const res = await this.$api.bigScreen.yearTrend()
+      this.options.series[0].data = res.touristTotal
+      this.options.series[1].data = res.scenicTotal
+      this.myChart.setOption(this.options)
+    },
+    init() {
+      let myChart = this.$echarts.init(this.$refs.trendCharts)
+      this.myChart = myChart
+      myChart.setOption(this.options)
     }
   },
   mounted() {
     this.init() // 初始化图表
+    this.getData()
     let _this = this
     window.addEventListener('resize', function () {
       if (_this.resizeTimer) clearTimeout(_this.resizeTimer)

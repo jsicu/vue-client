@@ -2,8 +2,8 @@
  * @Author: linzq
  * @Date: 2021-03-02 16:02:58
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-03 17:40:14
- * @Description: 游客总数折线图
+ * @LastEditTime: 2021-03-06 13:29:21
+ * @Description: 近十五日游客总数折线图
 -->
 <template>
   <div id="chartLine" style="width: 100%; height: 100%"></div>

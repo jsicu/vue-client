@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-01 10:14:28
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-04 17:09:20
+ * @LastEditTime: 2021-03-06 23:50:31
  * @Description: 可视化
 -->
 <template>
@@ -23,27 +23,39 @@
       <div class="flex-grid">
         <div class="cell pointer-auto">
           <i class="el-icon-menu title-icon" />
-          <span class="title">类型人气值</span>
+          <span class="title">实时景区类型人气值</span>
           <dv-decoration-4 :reverse="true" style="width:250px;height: 10px;" />
           <typePopularity />
         </div>
         <div class="cell" />
         <div class="cell pointer-auto">
           <i class="el-icon-menu title-icon" />
-          <span class="title">前十省份</span>
+          <span class="title">实时在园游客前十省份</span>
           <dv-decoration-4 :reverse="true" style="width:250px;height: 10px;" />
           <dv-scroll-ranking-board :config="config" style="width:100%;height:85%" />
         </div>
 
         <div class="cell pointer-auto">
           <i class="el-icon-menu title-icon" />
-          <span class="title">前十省份</span>
+          <span class="title">景区类型</span>
           <dv-decoration-4 :reverse="true" style="width:250px;height: 10px;" />
           <typePie />
         </div>
+
         <div class="cell">
           <div v-show="showInfo" class="infoWindows">
-            {{showInfo}}
+            <div class="detail">
+              <strong>名称：</strong><span>{{form.dest_name}}</span>
+            </div>
+            <div class="detail">
+              <strong>排名：</strong><span>{{form.ranking}}</span>
+            </div>
+            <div class="detail">
+              <strong>在园游客：</strong><span>{{form.tourists_num}}</span>
+            </div>
+            <div class="detail">
+              <strong>景区等级：</strong><span>{{form.grade_2020}}A级</span>
+            </div>
           </div>
         </div>
         <div class="cell pointer-auto">
@@ -66,18 +78,17 @@
         </div>
         <div class="cell pointer-auto">
           <i class="el-icon-menu title-icon" />
-          <span class="title">等级情况</span>
-          <el-select size="mini" class='year' :popper-append-to-body="false" popper-class="select-pop" v-model="value"
+          <span class="title">景区等级情况</span>
+          <el-select size="mini" class='year' :popper-append-to-body="false" popper-class="select-pop" v-model="yearValue"
             placeholder="请选择">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
             </el-option>
           </el-select>
           <dv-decoration-4 :reverse="true" style="width:250px;height: 10px;" />
-          <scenicNum />
+          <scenicNum :year="yearValue" />
         </div>
       </div>
     </div>
-  </div>
   </div>
 </template>
  
@@ -99,152 +110,39 @@ export default {
       dateTime: parseTime(new Date()),
       showInfo: false,
       options: [
-        {
-          value: '选项1',
-          label: '黄金糕'
-        },
-        {
-          value: '选项2',
-          label: '双皮奶'
-        },
-        {
-          value: '选项3',
-          label: '蚵仔煎'
-        },
-        {
-          value: '选项4',
-          label: '龙须面'
-        },
-        {
-          value: '选项5',
-          label: '北京烤鸭'
-        }
+        { value: '2015', label: '2015' },
+        { value: '2016', label: '2016' },
+        { value: '2017', label: '2017' },
+        { value: '2018', label: '2018' },
+        { value: '2019', label: '2019' },
+        { value: '2020', label: '2020' }
       ],
-      value: '',
+      yearValue: '2020',
       config: {
-        data: [
-          { name: '周口', value: 55 },
-          { name: '南阳', value: 120 },
-          { name: '西峡', value: 78 },
-          {
-            name: '驻马店',
-            value: 66
-          },
-          {
-            name: '新乡',
-            value: 80
-          },
-          {
-            name: '信阳',
-            value: 45
-          },
-          {
-            name: '漯河',
-            value: 29
-          }
-        ]
+        data: []
       },
-      list: []
+      list: [],
+      form: {}
     }
   },
   async created() {
-    // const res = await this.$api.bigScreen.list()
-    // const data = []
-    // // 构造数据
-    // for (const item of res.list) {
-    //   data.push({
-    //     geometry: {
-    //       type: 'Point',
-    //       coordinates: [item.lng, item.lat]
-    //     },
-    //     count: 10 * Math.random()
-    //   })
-    // }
-    // const dataSet = new mapv.DataSet(data)
-    // const options = {
-    //   size: 13,
-    //   gradient: { 0.25: 'rgb(0,0,255)', 0.55: 'rgb(0,255,0)', 0.85: 'yellow', 1.0: 'rgb(255,0,0)' },
-    //   max: 100,
-    //   // range: [0, 100], // 过滤显示数据范围
-    //   // minOpacity: 0.5, // 热力图透明度
-    //   // maxOpacity: 1,
-    //   draw: 'heatmap',
-    //   methods: {
-    //     click: function (item) {
-    //       console.log(item)
-    //     }
-    //   }
-    // }
-    // var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options)
-  },
-  mounted() {
-    setInterval(() => {
-      this.dateTime = parseTime(new Date())
-    }, 1000)
-    // console.log('mapv', mapv)
-    const _this = this
-    map = new BMap.Map('map', {
-      enableMapClick: false,
-      minZoom: 4,
-      maxZoom: 15
-    }) // 创建Map实例
-    map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 5) // 初始化地图,设置中心点坐标和地图级别
-    map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
-    map.setMapStyle({
-      style: 'midnight'
-    })
-    var randomCount = 2000
-    var data = []
-
-    var citys = [
-      '北京',
-      '天津',
-      '上海',
-      '重庆',
-      '石家庄',
-      '太原',
-      '呼和浩特',
-      '哈尔滨',
-      '长春',
-      '沈阳',
-      '济南',
-      '南京',
-      '合肥',
-      '杭州',
-      '南昌',
-      '福州',
-      '郑州',
-      '武汉',
-      '长沙',
-      '广州',
-      '南宁',
-      '西安',
-      '银川',
-      '兰州',
-      '西宁',
-      '乌鲁木齐',
-      '成都',
-      '贵阳',
-      '昆明',
-      '拉萨',
-      '海口'
-    ]
-
+    const res = await this.$api.bigScreen.list()
+    const top = await this.$api.bigScreen.topTen()
+    this.config = { data: top.topTen }
+    const data = []
     // 构造数据
-    while (randomCount--) {
-      const cityCenter = mapv.utilCityCenter.getCenterByCityName(citys[parseInt(Math.random() * citys.length)])
+    for (const item of res.list) {
       data.push({
         geometry: {
           type: 'Point',
-          coordinates: [cityCenter.lng - 2 + Math.random() * 4, cityCenter.lat - 2 + Math.random() * 4]
+          coordinates: [item.lng, item.lat]
         },
-        count: 30 * Math.random()
+        count: 10 * Math.random()
       })
     }
-
-    var dataSet = new mapv.DataSet(data)
-
-    var options = {
+    const _this = this
+    const dataSet = new mapv.DataSet(data)
+    const options = {
       size: 13,
       gradient: { 0.25: 'rgb(0,0,255)', 0.55: 'rgb(0,255,0)', 0.85: 'yellow', 1.0: 'rgb(255,0,0)' },
       max: 100,
@@ -255,22 +153,46 @@ export default {
       methods: {
         click: function (item) {
           console.log(item)
-          _this.click1()
+          _this.click1(item?.geometry)
         }
       }
     }
-
     var mapvLayer = new mapv.baiduMapLayer(map, dataSet, options)
+  },
+  async mounted() {
+    setInterval(() => {
+      this.dateTime = parseTime(new Date())
+    }, 1000)
+    map = new BMap.Map('map', {
+      enableMapClick: false,
+      minZoom: 4,
+      maxZoom: 15
+    }) // 创建Map实例
+    map.centerAndZoom(new BMap.Point(105.403119, 38.028658), 5) // 初始化地图,设置中心点坐标和地图级别
+    map.enableScrollWheelZoom(true) // 开启鼠标滚轮缩放
+    map.setMapStyle({
+      style: 'midnight'
+    })
   },
   computed: {},
   methods: {
-    click1() {
-      this.showInfo = true
+    async click1(data) {
+      if (data.coordinates) {
+        const params = {
+          lng: data.coordinates[0],
+          lat: data.coordinates[1]
+        }
+        const res = await this.$api.bigScreen.detail(params)
+        this.form = res[0]
+        if (res.length > 0) {
+          this.showInfo = true
+        }
+        // console.log(res)
+      }
       const times = setTimeout(() => {
         this.showInfo = false
         clearTimeout(times)
       }, 4000)
-      console.log(this.showInfo)
     }
   }
 }
@@ -291,13 +213,23 @@ export default {
     // background-color: rgba(56, 155, 255, 0.1);
     color: beige;
     .infoWindows {
-      width: 200px;
+      width: 240px;
       height: 100px;
-      background-color: rgb(255, 255, 255);
+      background-color: #0c3660bf;
       border-radius: 10px;
       position: relative;
       top: 50%;
-      color: #000;
+      left: 10%;
+      color: #eee;
+      padding: 12px;
+      .detail {
+        height: 28px;
+        line-height: 28px;
+        width: 215px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
     }
     .year {
       float: right;

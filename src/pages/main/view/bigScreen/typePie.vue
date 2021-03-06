@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-02 15:35:11
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-04 19:45:31
+ * @LastEditTime: 2021-03-06 13:06:42
  * @Description: 景区划分
 -->
 <template>
@@ -17,39 +17,8 @@ export default {
   components: {},
   data() {
     return {
-      scenicTotal: 990,
-      percent1: 30,
-      percent2: 70,
-      year: '2018-10-20',
-      time: '10:05:03'
-    }
-  },
-  mounted() {
-    this.drawLine() // 初始化图表
-    let _this = this
-    window.addEventListener('resize', function () {
-      if (_this.resizeTimer) clearTimeout(_this.resizeTimer)
-      _this.resizeTimer = setTimeout(function () {
-        _this.myChart.resize()
-      }, 100)
-    })
-  },
-  beforeDestroy() {
-    let _this = this
-    // 在组件生命周期结束的时候销毁。
-    window.removeEventListener('resize', function () {
-      if (_this.resizeTimer) clearTimeout(_this.resizeTimer)
-      _this.resizeTimer = setTimeout(function () {
-        _this.myChart.resize()
-      }, 100)
-    })
-  },
-  methods: {
-    drawLine() {
-      // 基于准备好的dom，初始化echarts实例
-      let myChart = this.$echarts.init(document.getElementById('typePie'), 'dark')
-      // 绘制图表
-      myChart.setOption({
+      myChart: null,
+      options: {
         backgroundColor: 'rgba(56,155,255,0)',
         tooltip: {
           trigger: 'item',
@@ -59,14 +28,14 @@ export default {
           {
             left: 0,
             orient: 'vertical',
-            data: ['AAAA级', 'AAA级', 'AAA级'],
+            data: ['文博院馆', '寺庙观堂', '旅游度假区', '自然保护区', '主题公园'],
             right: 'right',
             top: 'middle',
             selectedMode: false
           },
           {
             right: 0,
-            data: ['AAAAA级', 'A级'],
+            data: ['森林公园', '地质公园', '游乐园', '动物园', '植物园'],
             left: 'right',
             orient: 'vertical',
             top: 'middle',
@@ -93,11 +62,16 @@ export default {
             },
 
             data: [
-              { value: this.percent1, name: 'A级' },
-              { value: this.percent1, name: 'AA级' },
-              { value: this.percent1, name: 'AAA级' },
-              { value: this.percent1, name: 'AAAA级' },
-              { value: this.percent2, name: 'AAAAA级' }
+              { value: 0, name: '文博院馆' },
+              { value: 0, name: '寺庙观堂' },
+              { value: 0, name: '旅游度假区' },
+              { value: 0, name: '自然保护区' },
+              { value: 0, name: '主题公园' },
+              { value: 0, name: '森林公园' },
+              { value: 0, name: '地质公园' },
+              { value: 0, name: '游乐园' },
+              { value: 0, name: '动物园' },
+              { value: 0, name: '植物园' }
             ]
           },
           // 边框的设置
@@ -135,7 +109,43 @@ export default {
             ]
           }
         ]
-      })
+      }
+    }
+  },
+  mounted() {
+    this.drawLine() // 初始化图表
+    this.getData()
+    let _this = this
+    window.addEventListener('resize', function () {
+      if (_this.resizeTimer) clearTimeout(_this.resizeTimer)
+      _this.resizeTimer = setTimeout(function () {
+        _this.myChart.resize()
+      }, 100)
+    })
+  },
+  beforeDestroy() {
+    let _this = this
+    // 在组件生命周期结束的时候销毁。
+    window.removeEventListener('resize', function () {
+      if (_this.resizeTimer) clearTimeout(_this.resizeTimer)
+      _this.resizeTimer = setTimeout(function () {
+        _this.myChart.resize()
+      }, 100)
+    })
+  },
+  methods: {
+    async getData() {
+      const res = await this.$api.bigScreen.grade()
+      for (const key in res.type) {
+        this.options.series[0].data[key].value = res.type[key]
+      }
+      this.myChart.setOption(this.options) // 绘制图表
+    },
+    drawLine() {
+      // 基于准备好的dom，初始化echarts实例
+      let myChart = this.$echarts.init(document.getElementById('typePie'), 'dark')
+      this.myChart = myChart
+      myChart.setOption(this.options) // 绘制图表
     }
   }
 }
