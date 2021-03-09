@@ -1,3 +1,10 @@
+<!--
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-03-01 10:03:48
+ * @Description: 
+-->
 <template>
   <div id="app">
     <!-- 这是登录成功页 -->
@@ -33,7 +40,7 @@ export default {
     async getMenuList() {
       // this.$wsCache.set('menuList', list) // 本地静态路由
       const res = await this.$api.common.getMenuList()
-      if(res) {
+      if (res) {
         this.$wsCache.set('menuList', res)
       }
     }
