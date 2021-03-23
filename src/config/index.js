@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-23 19:29:10
+ * @LastEditTime: 2021-03-23 22:52:04
  * @Description: 配置
  */
 /**
@@ -50,7 +50,7 @@ export default {
    * api请求基础路径
    */
   base_url: {
-    dev: 'http://139.9.51.227:4000/', // 开发地址
+    dev: 'http://127.0.0.1:4000/', // 开发地址
     pro: 'http://139.9.51.227:4000/' // 生产地址
   }
 }
