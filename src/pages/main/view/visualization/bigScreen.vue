@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-01 10:14:28
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-06 23:50:31
+ * @LastEditTime: 2021-03-22 14:43:55
  * @Description: 可视化
 -->
 <template>
@@ -94,12 +94,12 @@
  
 <script>
 var map
-import scenicNum from './scenicNum' // 景区数量
-import echartTotal from './echartTotal' // 近15日游客请客
-import typePopularity from './typePopularity' // 类型人气
-import typePie from './typePie' // 景区划分
-import todayData from './todayData' // 今日数据
-import trend from './trend' // 趋势
+import scenicNum from './components/scenicNum' // 景区数量
+import echartTotal from './components/echartTotal' // 近15日游客请客
+import typePopularity from './components/typePopularity' // 类型人气
+import typePie from './components/typePie' // 景区划分
+import todayData from './components/todayData' // 今日数据
+import trend from './components/trend' // 趋势
 import { parseTime } from '@/utils'
 
 export default {
@@ -121,12 +121,11 @@ export default {
       config: {
         data: []
       },
-      list: [],
       form: {}
     }
   },
   async created() {
-    const res = await this.$api.bigScreen.list()
+    const res = await this.$api.bigScreen.allList()
     const top = await this.$api.bigScreen.topTen()
     this.config = { data: top.topTen }
     const data = []

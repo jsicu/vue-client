@@ -46,6 +46,7 @@ export default {
       }
     },
     async login() {
+      console.log('e4wr')
       //  加密后登录
       const res = await this.$api.login.login(this.form)
       if (res) {

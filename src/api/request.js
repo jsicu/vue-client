@@ -1,3 +1,10 @@
+/*
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-03-22 10:37:27
+ * @Description:
+ */
 import axios from 'axios'
 import qs from 'qs'
 import config from '@/config'
@@ -49,14 +56,16 @@ service.interceptors.response.use(
     if (res.data.code === 1) {
       return res.data.data
     } else {
-      // config.one_message ? ResetMessage.error(response.data.message) : Message.error(response.data.message)
+      config.one_message ? Message.closeAll() : null
       Message.error(res.data.message)
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    if (error.response)
-      config.one_message ? ResetMessage.error(error.response.data.message) : Message.error(error.response.data.message)
+    console.log('err: ' + error) // for debug
+    if (error.response) {
+      config.one_message ? Message.closeAll() : null
+      Message.error(error.response.data.message || error.response.data)
+    }
     return Promise.reject(error)
   }
 )

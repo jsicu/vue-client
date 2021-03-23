@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-01 20:20:01
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-06 18:04:25
+ * @LastEditTime: 2021-03-22 14:43:11
  * @Description: 可视化bigScreen
  */
 
@@ -10,8 +10,8 @@ import { get, post } from '../axios'
 
 export default {
   // 列表获取
-  list: function(params) {
-    return post(params, '/bigScreen/list')
+  allList: function(params) {
+    return post(params, '/bigScreen/allList')
   },
   // 所有数据获取
   allData: function(params) {
@@ -35,7 +35,6 @@ export default {
   },
   // 详情
   detail: function(params) {
-    console.log(params)
     return post(params, '/bigScreen/detail')
   }
 }

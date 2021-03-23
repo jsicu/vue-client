@@ -1,25 +1,17 @@
 import Search from '@components/Search'
 import ComTable from '@components/ComTable'
-// import MutiTable from '_c/MutiTable' // 多级表头
-// import MoreTable from '_c/MoreTable' // 多级表头-齐全
 export default {
   components: {
     Search,
     ComTable
-    // MutiTable,
-    // MoreTable
   },
   data() {
     return {
       loading: false, // 加载loading
       delLoading: false, // 删除loading
-      putAwayLoading: false, // 上架loading
-      soldOutLoading: false, // 下架loading
-      moveUpLoading: false, // 上移loading
-      moveDownLoading: false, // 下移loading
       listData: [], // 表格数据
       total: 0, // 总条数
-      defalutParams: {
+      defaultParams: {
         pageNum: 1,
         pageSize: 10
       },
@@ -28,8 +20,6 @@ export default {
       dialogVisible: false, // 是否显示弹窗
       dialogComponent: '', // 组件名称
       multipleSelection: [], // 表格选中数据
-      unid: null, // 列表ID
-      filterTime: 'yyyy-MM-dd HH:mm:ss',
       isFullscreen: false, // 是否全屏显示
       hasFullscreenIcon: false // 是否有全屏icon
     }
@@ -57,15 +47,15 @@ export default {
     async getList() {
       this.loading = true
       try {
-        // console.log(Object.assign(this.otherParams || {}, this.defalutParams))
-        // console.log(Object.assign({}, this.otherParams, this.defalutParams))
+        // console.log(Object.assign(this.otherParams || {}, this.defaultParams))
+        // console.log(Object.assign({}, this.otherParams, this.defaultParams))
         let res = {}
         // 自定义请求路径
-        if (this.apiUrl && this.list) {
-          res = await this.$api[this.apiUrl][this.list](Object.assign({}, this.otherParams, this.defalutParams))
+        if (this.apiUrl && this.listApi) {
+          res = await this.$api[this.apiUrl][this.listApi](Object.assign({}, this.otherParams, this.defaultParams))
         } else {
-          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.list || 'list']](
-            Object.assign({}, this.otherParams, this.defalutParams)
+          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.listApi || 'list']](
+            Object.assign({}, this.otherParams, this.defaultParams)
           )
         }
         if (res) {
@@ -86,32 +76,30 @@ export default {
       if (this.beforeSearch) {
         this.beforeSearch(row)
       } else {
-        this.defalutParams = {
+        this.defaultParams = {
           pageNum: 1,
           pageSize: 10
         }
-        this.defalutParams = Object.assign(this.defalutParams, row)
+        this.defaultParams = Object.assign(this.defaultParams, row)
         for (const key in row) {
-          if (!row[key]) delete this.defalutParams[key]
+          if (!row[key]) delete this.defaultParams[key]
         }
-        this.defalutParams.pageNum = 1
+        this.defaultParams.pageNum = 1
         this.getList()
       }
     },
     // 分页
     handleCurrentChange(val) {
-      this.defalutParams.pageNum = val
+      this.defaultParams.pageNum = val
       this.getList()
     },
     // 分页
     handleSizeChange(val) {
-      this.defalutParams.pageSize = val
+      this.defaultParams.pageSize = val
       this.getList()
     },
     // 显示弹窗
     showDialog(type, row, component, title) {
-      this.proItem = row
-      sessionStorage.editorInitVal = true
       this.dialogType = type
       if (title) {
         this.dialogTitle = title
@@ -120,14 +108,6 @@ export default {
       }
       this.dialogVisible = true
       this.dialogComponent = component || 'Info'
-      if (row) {
-        this.id = row.id
-        this.orgId = row.organizationId
-        this.compId = row.companyId
-        this.pkId = row.pkId
-      } else {
-        this.id = null
-      }
     },
     // 关闭弹窗
     closeDialog(val) {
@@ -136,7 +116,7 @@ export default {
     // 更新列表
     getData(type) {
       if (!type) {
-        this.defalutParams.pageNum = 1
+        this.defaultParams.pageNum = 1
       }
       this.dialogVisible = false
       this.getList()
@@ -147,18 +127,18 @@ export default {
         this.beforeReset(row)
       } else {
         for (const key in row) {
-          if (!row[key]) delete this.defalutParams[key]
+          if (!row[key]) delete this.defaultParams[key]
         }
-        // this.defalutParams = Object.assign(this.defalutParams, row)
-        this.defalutParams.pageNum = 1
-        delete this.defalutParams.startTime
-        delete this.defalutParams.endTime
+        this.defaultParams.pageNum = 1
+        delete this.defaultParams.startTime
+        delete this.defaultParams.endTime
         this.getList()
       }
     },
     // 批量删除
-    delData() {
+    delData(data) {
       if (this.multipleSelection.length === 0) {
+        this.$message.warning('请选择要删除的数据')
         return
       }
       this.$confirm('此操作将永久删除该数据, 是否继续?', '提示', {
@@ -167,25 +147,27 @@ export default {
         type: 'warning'
       }).then(async () => {
         this.delLoading = true
-        const ids = this.multipleSelection
-          .map(item => {
-            return item.id
-          })
-          .join(',')
+        // 兼容批量删除参数不统一
+        let ids = ''
+        if (!data) {
+          ids = this.multipleSelection
+            .map(item => {
+              return item.id
+            })
+            .join(',')
+        }
         let res = {}
         // 自定义请求路径
-        if (this.apiUrl && this.list) {
-          res = await this.$api[this.apiUrl][this.del]({
-            ids: ids
-          })
+        if (this.apiUrl && this.delApi) {
+          res = await this.$api[this.apiUrl][this.delApi](data ? data : { ids })
         } else {
-          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.del || 'del']]({
-            ids: ids
-          })
+          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.delApi || 'del']](
+            data ? data : { ids }
+          )
         }
         if (res) {
           this.$message.success('删除成功')
-          this.defalutParams.pageNum = 1
+          this.defaultParams.pageNum = 1
           this.getList()
         }
         this.delLoading = false
@@ -203,14 +185,14 @@ export default {
           _this.delLoading = true
           let res = {}
           // 自定义请求路径
-          if (this.apiUrl && this.list) {
-            res = await this.$api[this.apiUrl][this.del](data)
+          if (this.apiUrl && this.delApi) {
+            res = await this.$api[this.apiUrl][this.delApi](data)
           } else {
-            res = await _this.$api[_this.$route.meta.module][_this.$route.meta.request[this.del || 'del']](data)
+            res = await _this.$api[_this.$route.meta.module][_this.$route.meta.request[this.delApi || 'del']](data)
           }
           if (res) {
             _this.$message.success('删除成功')
-            _this.defalutParams.pageNum = 1
+            _this.defaultParams.pageNum = 1
             _this.getList()
           }
           _this.delLoading = false
@@ -225,13 +207,13 @@ export default {
       _this.delLoading = true
       let res = {}
       // 自定义请求路径
-      if (this.apiUrl && this.list) {
-        res = await this.$api[this.apiUrl][this.del](data)
+      if (this.apiUrl && this.delApi) {
+        res = await this.$api[this.apiUrl][this.delApi](data)
       } else {
-        res = await _this.$api[_this.$route.meta.module][_this.$route.meta.request[this.del || 'del']](data)
+        res = await _this.$api[_this.$route.meta.module][_this.$route.meta.request[this.delApi || 'del']](data)
       }
       if (res) {
-        _this.defalutParams.pageNum = 1
+        _this.defaultParams.pageNum = 1
         _this.getList()
       }
       _this.delLoading = false

@@ -298,8 +298,6 @@ export default {
     changeVal(val, item) {
       this.$emit(`${item.field}Change`, val)
     },
-    // 修改人：林中奇
-    // 日期格式化
     formateDate(timeStamp) {
       if (!timeStamp) return ''
       const date = new Date(timeStamp)

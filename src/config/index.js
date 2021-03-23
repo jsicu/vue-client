@@ -1,3 +1,10 @@
+/*
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-03-23 19:29:10
+ * @Description: 配置
+ */
 /**
  * 全局配置
  */
@@ -19,6 +26,16 @@ export default {
   sidebarLogo: false,
 
   /**
+   * 是否每次只显示一个并且是最新的message提示
+   */
+  one_message: true,
+
+  /**
+   * 导航栏是否只保持一个子菜单的展开
+   */
+  unique_opened: false,
+
+  /**
    * @type {boolean} true | false
    * @description 标题栏是否固定
    */
@@ -28,11 +45,12 @@ export default {
    * 是否显示标签页
    */
   has_tags: true,
-  
+
   /**
    * api请求基础路径
    */
   base_url: {
-    dev: 'http://127.0.0.1:4000/' // 开发地址
-  },
+    dev: 'http://139.9.51.227:4000/', // 开发地址
+    pro: 'http://139.9.51.227:4000/' // 生产地址
+  }
 }
