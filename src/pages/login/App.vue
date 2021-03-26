@@ -2,7 +2,7 @@
   <div id="login">
     <el-form label-width="80px" :model="form">
       <el-form-item label="用户名">
-        <el-input v-model="form.name"></el-input>
+        <el-input v-model="form.userName"></el-input>
       </el-form-item>
       <el-form-item label="密码">
         <el-input type="password" v-model="form.password"></el-input>
@@ -23,7 +23,7 @@ export default {
   data() {
     return {
       form: {
-        name: '',
+        userName: '',
         password: ''
       }
     }

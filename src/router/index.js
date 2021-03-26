@@ -174,7 +174,12 @@ export const asyncRoutes = [
         path: 'scenic',
         component: () => import('@mainView/visualization/scenic'),
         name: 'scenic',
-        meta: { title: '景区管理', icon: 'message' }
+        meta: { 
+          title: '景区管理', 
+          icon: 'message',
+          module: 'bigScreen',
+          request: {list:'list'}
+        }
       }
     ]
   },

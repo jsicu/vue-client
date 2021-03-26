@@ -2,13 +2,17 @@
  * @Author: linzq
  * @Date: 2021-03-01 20:20:01
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-22 14:43:11
+ * @LastEditTime: 2021-03-25 23:00:12
  * @Description: 可视化bigScreen
  */
 
 import { get, post } from '../axios'
 
 export default {
+  // 列表获取
+  list: function(params) {
+    return get(params, '/bigScreen/list')
+  },
   // 列表获取
   allList: function(params) {
     return post(params, '/bigScreen/allList')

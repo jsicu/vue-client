@@ -48,7 +48,7 @@ export default {
       this.loading = true
       try {
         // console.log(Object.assign(this.otherParams || {}, this.defaultParams))
-        // console.log(Object.assign({}, this.otherParams, this.defaultParams))
+        console.log([this.$route.meta.module],[this.$route.meta.request])
         let res = {}
         // 自定义请求路径
         if (this.apiUrl && this.listApi) {

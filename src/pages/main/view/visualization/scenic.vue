@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-22 11:41:42
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-22 14:38:16
+ * @LastEditTime: 2021-03-25 23:33:10
  * @Description: 景区管理
 -->
 <template>
@@ -10,6 +10,9 @@
     <div class="content">
       <div class="base-title">景区管理</div>
       <com-table :columns="columns" :data="listData" :loading="loading" />
+      <el-pagination v-if="listData.length !== 0" :current-page.sync="defaultParams.pageNum" :page-sizes="pageSizes"
+        :page-size="defaultParams.pageSize" class="com-table-pagination" layout="total, sizes, prev, pager, next, jumper"
+        :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
   </div>
 </template>
@@ -25,8 +28,8 @@ export default {
     return {
       columns: [
         {
-          key: 'matterNames',
-          title: '事项类型'
+          key: 'destName',
+          title: '景区名称'
         }
       ]
     }
