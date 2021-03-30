@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-23 22:52:04
+ * @LastEditTime: 2021-03-29 19:23:37
  * @Description: 配置
  */
 /**
@@ -45,6 +45,11 @@ export default {
    * 是否显示标签页
    */
   has_tags: true,
+
+  /**
+   * 全局尺寸
+   */
+  size: 'small',
 
   /**
    * api请求基础路径

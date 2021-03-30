@@ -15,6 +15,7 @@ export default {
         pageNum: 1,
         pageSize: 10
       },
+      pageSizes: [10, 20, 50, 100], // 页条数，可自定义
       dialogType: '', // 弹窗类型
       dialogTitle: '', // 弹窗标题
       dialogVisible: false, // 是否显示弹窗
@@ -31,24 +32,13 @@ export default {
       this.getList()
     }
   },
-  computed: {
-    isShowDelBtn: function() {
-      return (
-        JSON.parse(JSON.parse(sessionStorage.getItem('userInfo')).v).type == 1 ||
-        JSON.parse(JSON.parse(sessionStorage.getItem('userInfo')).v).is_delete == 1
-      )
-    },
-    isShowSortBtn: function() {
-      return JSON.parse(JSON.parse(sessionStorage.getItem('userInfo')).v).type == 1
-    }
-  },
   methods: {
     // 获取列表数据
     async getList() {
       this.loading = true
       try {
         // console.log(Object.assign(this.otherParams || {}, this.defaultParams))
-        console.log([this.$route.meta.module],[this.$route.meta.request])
+        // console.log([this.$route.meta.module],[this.$route.meta.request])
         let res = {}
         // 自定义请求路径
         if (this.apiUrl && this.listApi) {
@@ -82,7 +72,7 @@ export default {
         }
         this.defaultParams = Object.assign(this.defaultParams, row)
         for (const key in row) {
-          if (!row[key]) delete this.defaultParams[key]
+          if (row[key] == undefined || row[key]?.length === 0) delete this.defaultParams[key]
         }
         this.defaultParams.pageNum = 1
         this.getList()

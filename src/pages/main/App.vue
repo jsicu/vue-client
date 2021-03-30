@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-01 10:03:48
+ * @LastEditTime: 2021-03-29 18:28:44
  * @Description: 
 -->
 <template>
@@ -14,10 +14,13 @@
 
 <script>
 import list from './routerList'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
   created() {
+    this.getDicData()
+
     if (this.$wsCache.get('newMenu')) {
       this.$store.dispatch('RenderNewMenu').then(() => {
         this.$router.options.routes = this.$store.getters.routers
@@ -37,6 +40,9 @@ export default {
     }
   },
   methods: {
+    ...mapActions({
+      getDicData: 'getDicData',
+    }),
     async getMenuList() {
       // this.$wsCache.set('menuList', list) // 本地静态路由
       const res = await this.$api.common.getMenuList()

@@ -100,7 +100,6 @@
       </el-form-item>
       <el-form-item v-show="data.length > 0">
         <el-button
-          v-ripples
           icon="el-icon-search"
           type="primary"
           class="ct-btn-search"
@@ -108,14 +107,12 @@
         >查询</el-button>
         <el-button
           v-if="showReset"
-          v-ripples
           class="ct-btn-reset"
           icon="el-icon-refresh"
           @click="resetForm('ruleForm')"
         >重置</el-button>
         <el-button
           v-if="showAdd"
-          v-ripples
           icon="el-icon-circle-plus-outline"
           class="ct-btn-add"
           @click="add"
@@ -123,7 +120,6 @@
         <el-button
           v-if="showExcel"
           v-permission="'dels'"
-          v-ripples
           icon="el-icon-download"
           class="btn-defs"
           @click="getExcel"

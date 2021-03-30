@@ -1,3 +1,10 @@
+/*
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-03-29 19:21:36
+ * @Description:
+ */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
@@ -25,7 +32,9 @@ Vue.prototype.$wsCache = wsCache
 Vue.prototype.$config = config
 Vue.prototype.$echarts = echarts
 
-Vue.use(ElementUI)
+Vue.use(ElementUI, {
+  size: config.size || 'medium' // set element-ui default size
+})
 Vue.use(dataV)
 
 /* eslint-disable no-new */

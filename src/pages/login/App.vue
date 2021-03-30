@@ -1,3 +1,10 @@
+<!--
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-03-29 12:53:13
+ * @Description: 登录页
+-->
 <template>
   <div id="login">
     <el-form label-width="80px" :model="form">
@@ -23,8 +30,8 @@ export default {
   data() {
     return {
       form: {
-        userName: '',
-        password: ''
+        userName: 'admin',
+        password: 'admin'
       }
     }
   },
