@@ -2,73 +2,53 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-29 12:53:13
- * @Description: 登录页
+ * @LastEditTime: 2021-03-31 16:08:29
+ * @Description: 
 -->
 <template>
-  <div id="login">
-    <el-form label-width="80px" :model="form">
-      <el-form-item label="用户名">
-        <el-input v-model="form.userName"></el-input>
-      </el-form-item>
-      <el-form-item label="密码">
-        <el-input type="password" v-model="form.password"></el-input>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="signIn">登录</el-button>
-      </el-form-item>
-    </el-form>
+  <div class="position">
+    <div class="position" style="z-index: 10;">
+      <loginWidget :color="vedioCanPlay ? ' #000' : '#eee' " />
+    </div>
+    <video src="../../assets/mp4/background.mp4" muted="muted" @canplay="canplay" autoplay="autoplay" loop="loop"
+      style="width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;" />
+    <!-- TODO: 初始进入页面会显示星空图，待优化 -->
+    <div class="poster" v-if="!vedioCanPlay">
+      <img src="../../assets/img/sky.jpg" alt="星空">
+    </div>
   </div>
 </template>
 
 <script>
-import { JSEncrypt } from 'jsencrypt'
-import { rsaEncrypt } from '@/utils/index.js'
-
+import loginWidget from './loginWidget'
 export default {
-  name: 'Login',
+  name: 'login',
+  components: { loginWidget },
   data() {
     return {
-      form: {
-        userName: 'admin',
-        password: 'admin'
-      }
+      vedioCanPlay: false
     }
   },
   methods: {
-    signIn() {
-      // window.location.href = 'main.html' // 跳过登录
-      this.publicKey()
-    },
-    async publicKey() {
-      // 获取加密公钥
-      const res = await this.$api.login.publicKey()
-      if (res) {
-        this.$wsCache.set('publicKey', res)
-        const encrypt = new JSEncrypt()
-        encrypt.setPublicKey(res)
-        const encrypted = encrypt.encrypt(this.form.password)
-        this.$set(this.form, 'password', encrypted)
-        this.login()
-      }
-    },
-    async login() {
-      console.log('e4wr')
-      //  加密后登录
-      const res = await this.$api.login.login(this.form)
-      if (res) {
-        this.$wsCache.set('userInfo', res)
-        window.location.href = 'main.html'
-      }
+    canplay() {
+      this.vedioCanPlay = true
     }
   }
 }
 </script>
 
-<style>
-#login {
-  margin: 20% 35%;
-  text-align: center;
-  width: 30%;
+
+<style lang="less" scoped>
+.position {
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.poster img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 </style>
