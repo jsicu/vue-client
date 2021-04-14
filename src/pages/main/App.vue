@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-29 18:28:44
+ * @LastEditTime: 2021-03-31 20:57:20
  * @Description: 
 -->
 <template>
@@ -18,6 +18,9 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
+  mounted() {
+    window.addEventListener('beforeunload', e => this.logout())
+  },
   created() {
     this.getDicData()
 
@@ -39,9 +42,12 @@ export default {
       })
     }
   },
+  beforeDestroy() {
+    alert('111')
+  },
   methods: {
     ...mapActions({
-      getDicData: 'getDicData',
+      getDicData: 'getDicData'
     }),
     async getMenuList() {
       // this.$wsCache.set('menuList', list) // 本地静态路由
@@ -49,6 +55,9 @@ export default {
       if (res) {
         this.$wsCache.set('menuList', res)
       }
+    },
+    async logout() {
+      await this.$api.login.logout()
     }
   }
 }

@@ -1,4 +1,20 @@
+/*
+ * @Author: linzq
+ * @Date: 2021-02-20 16:07:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-04-08 09:23:59
+ * @Description:
+ */
 const path = require('path')
+// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+const defaultSettings = require('./src/config')
+
+const name = defaultSettings.title || '案例演示' // page title
+const Timestamp = new Date().getTime()
+
+console.log(process.env.VUE_APP_Version)
+console.log(defaultSettings.title)
 
 const resolve = dir => {
   return path.join(__dirname, dir)
@@ -18,19 +34,31 @@ module.exports = {
   // 如果你不需要使用eslint，把lintOnSave设为false即可
   lintOnSave: true,
   configureWebpack: {
-    externals: {
-      AMap: 'AMap',
-      AMapUI: 'AMapUI'
+    name,
+    output: {
+      // [模块名称.版本号.时间戳]
+      filename: `js/[name].${process.env.VUE_APP_Version}.${Timestamp}.js`,
+      chunkFilename: `js/[name].${process.env.VUE_APP_Version}.${Timestamp}.js`
+    },
+    // plugins: [
+    //   new MiniCssExtractPlugin({
+    //     // 打包后css文件名 [模块名称.版本号.时间戳]
+    //     filename: `css/[name].${process.env.VUE_APP_Version}.${Timestamp}.css`,
+    //     chunkFilename: `css/[name].${process.env.VUE_APP_Version}.${Timestamp}.css`
+    //   })
+    // ],
+    resolve: {
+      alias: {
+        '@components': resolve('src/components'),
+        '@mixins': resolve('src/mixins'),
+        '@pages': resolve('src/pages'),
+        '@mainView': resolve('src/pages/main/view')
+      }
     }
   },
   chainWebpack: config => {
     const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
     types.forEach(type => addStyleResource(config.module.rule('less').oneOf(type)))
-    config.resolve.alias
-      .set('@components', resolve('src/components')) // key,value自行定义，比如.set('@@', resolve('src/components'))
-      .set('@mixins', resolve('src/mixins'))
-      .set('@pages', resolve('src/pages'))
-      .set('@mainView', resolve('src/pages/main/view'))
     config.module.rule('svg').uses.clear()
     config.module
       .rule('svg')
@@ -42,11 +70,6 @@ module.exports = {
       .options({
         symbolId: 'icon-[name]'
       })
-    // config.module.rule('svg').use('svg-sprite-loader')
-    //   .loader('svg-sprite-loader')
-    //   .options({
-    //     symbolId: 'icon-[name]'
-    //   })
   },
   css: {
     loaderOptions: {
@@ -58,9 +81,6 @@ module.exports = {
   // 设为false打包时不生成.map文件
   productionSourceMap: false,
   // 这里写你调用接口的基础路径，来解决跨域
-  // devServer: {
-  //   proxy: 'localhost:3000'
-  // }
   devServer: {
     port: 3999, // 端口
     proxy: {

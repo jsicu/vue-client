@@ -1,3 +1,10 @@
+<!--
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-04-01 10:18:23
+ * @Description: 
+-->
 /**
  * @Author: 林中奇
  * @Date: 2020/07/06
@@ -10,6 +17,7 @@
   <div>
     <!-- <router-link to="/home/home">Home</router-link> -->
     首页
+    <el-button @click="click">点击</el-button>
   </div>
 </template>
 
@@ -28,7 +36,11 @@ export default {
   created() {},
   mounted() {},
   //方法集合
-  methods: {}
+  methods: {
+    async click() {
+      await this.$api.common.serveTest()
+    }
+  }
 }
 </script>
 <style lang='less' scoped>

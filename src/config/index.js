@@ -2,13 +2,18 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-31 18:27:41
+ * @LastEditTime: 2021-04-07 17:18:17
  * @Description: 配置
  */
 /**
  * 全局配置
  */
-export default {
+api = {
+  dev: 'http://localhost:4000/', // 开发地址
+  // dev: 'http://10.206.142.251:9527/', // 开发地址
+  pro: 'http://139.9.51.227:4000/' //生产地址
+}
+module.exports = {
   /**
    * 配置显示在浏览器标签的title
    */
@@ -54,8 +59,5 @@ export default {
   /**
    * api请求基础路径
    */
-  base_url: {
-    dev: 'http://139.9.51.227:4000/', // 开发地址
-    pro: 'http://139.9.51.227:4000/' // 生产地址
-  }
+  base_url: process.env.NODE_ENV === 'development' ? api.dev : api.pro
 }
