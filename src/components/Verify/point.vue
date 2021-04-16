@@ -10,31 +10,19 @@
 <template>
   <div style="position: relative">
     <div class="verify-img-out">
-      <div
-        class="verify-img-panel"
-        :style="{
+      <div class="verify-img-panel" :style="{
           width: setSize.imgWidth,
           height: setSize.imgHeight,
           'background-size': setSize.imgWidth + ' ' + setSize.imgHeight,
           'margin-bottom': space + 'px'
-        }"
-      >
+        }">
         <div class="verify-refresh" style="z-index:3" @click="refresh" v-show="showRefresh">
           <i class="iconfont icon-refresh"></i>
         </div>
-        <img
-          :src="pointBackImgBase"
-          ref="canvas"
-          alt
-          style="width:100%;height:100%;display:block"
-          @click="bindingClick ? canvasClick($event) : undefined"
-        />
+        <img :src="pointBackImgBase" ref="canvas" alt style="width:100%;height:100%;display:block"
+          @click="bindingClick ? canvasClick($event) : undefined" />
 
-        <div
-          v-for="(tempPoint, index) in tempPoints"
-          :key="index"
-          class="point-area"
-          :style="{
+        <div v-for="(tempPoint, index) in tempPoints" :key="index" class="point-area" :style="{
             'background-color': '#1abd6c',
             color: '#fff',
             'z-index': 9999,
@@ -46,19 +34,15 @@
             position: 'absolute',
             top: parseInt(tempPoint.y - 10) + 'px',
             left: parseInt(tempPoint.x - 10) + 'px'
-          }"
-        >{{ index + 1 }}</div>
+          }">{{ index + 1 }}</div>
       </div>
     </div>
-    <div
-      class="verify-bar-area"
-      :style="{
+    <div class="verify-bar-area" :style="{
         width: setSize.imgWidth,
         color: this.barAreaColor,
         'border-color': this.barAreaBorderColor,
         'line-height': barHeight
-      }"
-    >
+      }">
       <span class="verify-msg">{{ text }}</span>
     </div>
   </div>
@@ -112,6 +96,7 @@ export default {
   },
   data() {
     return {
+      uuId: '',
       fontPos: [], // 选中的坐标信息
       checkPosArr: [], //用户点击的坐标
       num: 1, //点击的记数
@@ -169,7 +154,8 @@ export default {
           //发送后端请求
           let data = {
             captchaType: 1,
-            checkJson: rsaEncrypt(this.checkPosArr)
+            checkJson: rsaEncrypt(this.checkPosArr),
+            uuId: this.uuId
           }
           const res = await this.$api.verify.check(data)
           if (res) {
@@ -233,6 +219,7 @@ export default {
         this.pointBackImgBase = res.bgCanvas
         this.text = '请依次点击【' + res.words + '】'
         this.original = res.size
+        this.uuId = res.uuId
       }
     },
     //坐标转换函数

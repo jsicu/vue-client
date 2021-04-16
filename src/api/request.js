@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-22 10:37:27
+ * @LastEditTime: 2021-04-15 09:22:32
  * @Description:
  */
 import axios from 'axios'
@@ -12,7 +12,7 @@ import wsCache from '@/cache'
 
 import { Message } from 'element-ui'
 
-export const PATH_URL = process.env.NODE_ENV === 'development' ? config.base_url.dev : config.base_url.pro
+export const PATH_URL = config.base_url
 // const PATH_URL = '/api'
 
 // 创建axios实例

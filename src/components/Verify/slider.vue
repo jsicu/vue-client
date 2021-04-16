@@ -157,7 +157,8 @@ export default {
       showRefresh: true,
       transitionLeft: '',
       transitionWidth: '',
-      distance: 0 // 滑块复位距离比较
+      distance: 0, // 滑块复位距离比较
+      uuId: ''
     }
   },
   created() {},
@@ -263,6 +264,7 @@ export default {
           this.distance = moveLeftDistance = (moveLeftDistance * 310) / parseInt(this.setSize.imgWidth)
 
           const data = {
+            uuId: this.uuId,
             checkJson: rsaEncrypt(moveLeftDistance)
           }
           const res = await this.$api.verify.check(data)
@@ -395,6 +397,7 @@ export default {
       if (res) {
         this.backImgBase = res.sliderBG
         this.blockBackImgBase = res.slider
+        this.uuId = res.uuId
       }
     }
   },

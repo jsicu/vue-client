@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-31 16:08:29
+ * @LastEditTime: 2021-04-15 17:38:12
  * @Description: 
 -->
 <template>
@@ -28,6 +28,10 @@ export default {
     return {
       vedioCanPlay: false
     }
+  },
+  mounted() {
+    sessionStorage.removeItem('userInfo')
+    sessionStorage.removeItem('menuList')
   },
   methods: {
     canplay() {
