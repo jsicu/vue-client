@@ -146,7 +146,7 @@ export const asyncRoutes = [
         name: 'test',
         meta: {
           title: '测试页',
-          icon: 'iconshouye',
+          icon: 'tree',
           noCache: true,
           module: 'test',
           request: {}
@@ -155,14 +155,31 @@ export const asyncRoutes = [
     ]
   },
   {
-    path: '/',
+    path: '/visualization',
     component: Layout,
+    redirect: '/visualization',
+    meta: {
+      title: '可视化',
+      icon: 'visualiza'
+    },
+    alwaysShow: true,
     children: [
       {
-        path: '/bigScreen',
-        component: () => import('@mainView/bigScreen'),
+        path: 'bigScreen',
+        component: () => import('@mainView/visualization/bigScreen'),
         name: 'bigScreen',
-        meta: { title: 'bigScreen', icon: 'home' }
+        meta: { title: '可视化大屏', icon: 'screen' }
+      },
+      {
+        path: 'scenic',
+        component: () => import('@mainView/visualization/scenic'),
+        name: 'scenic',
+        meta: { 
+          title: '景区管理', 
+          icon: 'message',
+          module: 'bigScreen',
+          request: {list:'list'}
+        }
       }
     ]
   },

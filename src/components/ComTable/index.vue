@@ -2,68 +2,19 @@
   <el-table
     :ref="refName"
     v-loading="loading"
-    :element-loading-spinner="elementLoadingSpinner"
-    :element-loading-text="elementLoadingText"
-    :element-loading-background="elementLoadingBackground"
-    :stripe="stripe"
     :border="border"
-    :show-header="showHeader"
-    :show-summary="showSummary"
-    :summary-method="summaryMethod"
-    :highlight-current-row="highlightCurrentRow"
-    :selection="selection"
-    :data="data"
-    :height="height"
-    :max-height="maxHeight"
-    :size="size"
-    :row-key="rowKey"
-    :current-row-key="currentRowKey"
-    :row-class-name="rowClassName"
-    :row-style="rowStyle"
-    :cell-class-name="cellClassName"
-    :cell-style="cellStyle"
-    :header-row-class-name="headerRowClassName"
-    :header-row-style="headerRowStyle"
-    :header-cell-class-name="headerCellClassName"
-    :header-cell-style="headerCellStyle"
-    :empty-text="emptyText"
-    :default-expand-all="defaultExpandAll"
-    :expand-row-keys="expandRowKeys"
-    :default-sort="defaultSort"
-    :tooltip-effect="tooltipEffect"
-    :sum-text="sumText"
-    :span-method="spanMethod"
-    :select-on-indeterminate="selectOnIndeterminate"
-    :indent="indent"
-    :lazy="lazy"
-    :load="load"
-    :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-    @selection-change="handleSelectionChange"
-    @current-change="handleCurrentChange"
-    @select="select"
-    @select-all="selectAll"
-    @cell-mouse-enter="cellMouseEnter"
-    @cell-mouse-leave="cellMouseLeave"
-    @cell-click="cellClick"
-    @cell-dblclick="cellDblclick"
-    @row-click="rowClick"
-    @row-contextmenu="rowContextmenu"
-    @row-dblclick="rowDblclick"
-    @header-click="headerClick"
-    @header-contextmenu="headerContextmenu"
-    @sort-change="sortChange"
-    @filter-change="filterChange"
-    @header-dragend="headerDragend"
-    @expand-change="expandChange"
+    v-bind="$attrs"
+    v-on="$listeners"
   >
     <el-table-column
       v-if="selection"
       type="selection"
+      align="center"
       :selectable="isSelectable"
       :reserve-selection="reserveSelection"
       :width="selectionWidth + 'px'"
     />
-    <el-table-column v-if="index" type="index"       >
+    <el-table-column v-if="index" type="index" align="center" >
       <template slot-scope="scope">
         <span v-if="indexIsSelfIncreasing">{{(pageIndex - 1) * pageSize + scope.$index + 1}}</span>
         <span v-else>{{scope.$index + 1}}</span>
@@ -86,7 +37,7 @@
         :width="item.width"
         :min-width="item.minWidth"
         :fixed="item.fixed"
-        :align="item.align"
+        :align="item.align|| 'center'"
       >
         <template slot-scope="scope">
           <table-slot v-if="item.slot" :row="scope.row" :column="item" :index="scope.$index" />
@@ -145,69 +96,19 @@ export default {
   },
   props: {
     // loading状态
-    loading: {
-      type: Boolean,
-      default: false
-    },
-    // Table 的高度，默认为自动高度。如果 height 为 number 类型，单位 px；如果 height 为 string 类型，则这个高度会设置为 Table 的 style.height 的值，Table 的高度会受控于外部样式。
-    height: {
-      type: String | Number,
-      default: null
-    },
-    // Table 的最大高度。合法的值为数字或者单位为 px 的高度。
-    maxHeight: {
-      type: String | Number,
-      default: null
-    },
-    // 表格尺寸
-    size: {
-      type: String,
-      default: ''
-    },
-    // 列是否自动撑开
-    fit: {
-      type: Boolean,
-      default: true
-    },
-    // loading样式
-    elementLoadingSpinner: {
-      type: String,
-      default: ''
-    },
-    // loading文字提示
-    elementLoadingText: {
-      type: String,
-      default: ''
-    },
-    // loading背景颜色
-    elementLoadingBackground: {
-      type: String,
-      default: ''
-    },
-    // 组件名称
-    refName: {
-      type: String,
-      default: 'table'
-    },
-    // 是否显示表头
-    showHeader: {
-      type: Boolean,
-      default: true
-    },
-    // 是否斑马纹
-    stripe: {
+    loading: { //
       type: Boolean,
       default: false
     },
     // 是否边框
     border: {
       type: Boolean,
-      default: true
+      default: true,
     },
-    // 是否高亮当前行
-    highlightCurrentRow: {
-      type: Boolean,
-      default: false
+    // 组件名称
+    refName: {
+      type: String,
+      default: 'table'
     },
     // 是否开启多选
     selection: {
@@ -218,16 +119,6 @@ export default {
     index: {
       type: Boolean,
       default: true
-    },
-    // 当前行的 key，只写属性
-    currentRowKey: {
-      type: String | Number,
-      default: null
-    },
-    // 表格数据
-    data: {
-      type: Array,
-      default: () => []
     },
     // 表格头部
     columns: {
@@ -244,125 +135,10 @@ export default {
       type: Boolean,
       default: false
     },
-    // 渲染树形数据时，必须要指定 row-key
-    rowKey: {
-      type: String,
-      default: undefined
-    },
     // 全选的宽度
     selectionWidth: {
       type: Number,
       default: 40
-    },
-    // 是否进行统计
-    showSummary: {
-      type: Boolean,
-      default: false
-    },
-    // 自定义合计方法
-    summaryMethod: {
-      type: Function,
-      default: null
-    },
-    // 行的 className 的回调方法，也可以使用字符串为所有行设置一个固定的 className。
-    rowClassName: {
-      type: Function | Object,
-      default: null
-    },
-    // 行的 style 的回调方法，也可以使用一个固定的 Object 为所有行设置一样的 Style。
-    rowStyle: {
-      type: Function | Object,
-      default: null
-    },
-    // 单元格的 className 的回调方法，也可以使用字符串为所有单元格设置一个固定的 className。
-    cellClassName: {
-      type: Function | String,
-      default: null
-    },
-    // 单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有单元格设置一样的 Style。
-    cellStyle: {
-      type: Function | Object,
-      default: null
-    },
-    // 表头行的 className 的回调方法，也可以使用字符串为所有表头行设置一个固定的 className。
-    headerRowClassName: {
-      type: Function | String,
-      default: null
-    },
-    // 表头行的 style 的回调方法，也可以使用一个固定的 Object 为所有表头行设置一样的 Style。
-    headerRowStyle: {
-      type: Function | Object,
-      default: null
-    },
-    // 表头单元格的 className 的回调方法，也可以使用字符串为所有表头单元格设置一个固定的 className。
-    headerCellClassName: {
-      type: Function | String,
-      default: null
-    },
-    // 表头单元格的 style 的回调方法，也可以使用一个固定的 Object 为所有表头单元格设置一样的 Style。
-    headerCellStyle: {
-      type: Function | Object,
-      default: null
-    },
-    // 空数据时显示的文本内容，也可以通过 slot="empty" 设置
-    emptyText: {
-      type: String,
-      default: '暂无数据'
-    },
-    // 是否默认展开所有行，当 Table 包含展开行存在或者为树形表格时有效
-    defaultExpandAll: {
-      type: Boolean,
-      default: false
-    },
-    // 可以通过该属性设置 Table 目前的展开行，需要设置 row-key 属性才能使用，该属性为展开行的 keys 数组。
-    expandRowKeys: {
-      type: Array,
-      default: undefined
-    },
-    // 默认的排序列的 prop 和顺序。它的prop属性指定默认的排序的列，order指定默认排序的顺序
-    defaultSort: {
-      type: Object,
-      default: () => {
-        return {
-          prop: '',
-          order: ''
-        }
-      }
-    },
-    // tooltip effect 属性
-    tooltipEffect: {
-      type: String,
-      default: 'dark'
-    },
-    // 合计行第一列的文本
-    sumText: {
-      type: String,
-      default: '合计'
-    },
-    // 合并行或列的计算方法
-    spanMethod: {
-      type: Function,
-      default: null
-    },
-    // 在多选表格中，当仅有部分行被选中时，点击表头的多选框时的行为。若为 true，则选中所有行；若为 false，则取消选择所有行
-    selectOnIndeterminate: {
-      type: Boolean,
-      default: true
-    },
-    // 展示树形数据时，树节点的缩进
-    indent: {
-      type: Number,
-      default: 16
-    },
-    // 是否懒加载子节点数据
-    lazy: {
-      type: Boolean,
-      default: null
-    },
-    // 加载子节点数据的函数，lazy 为 true 时生效，函数第二个参数包含了节点的层级信息
-    load: {
-      type: Function,
-      default: () => null
     },
     // 仅对 type=selection 的列有效，类型为 Boolean，为 true 则会在数据更新之后保留之前选中的数据（需指定 row-key）
     reserveSelection: {
@@ -400,14 +176,6 @@ export default {
     }
   },
   methods: {
-    // 多选
-    handleSelectionChange (val) {
-      this.$emit('select-cell', val)
-    },
-    // 单选
-    handleCurrentChange (val) {
-      this.$emit('change-cell', val)
-    },
     // 双击
     tableDbClick (row, key, index) {
       this.editIndex = index
@@ -432,10 +200,6 @@ export default {
         this.$emit('edit-column', params)
       }
     },
-    // 函数式组件发射事件
-    editColumn (params) {
-      this.$emit('edit-column', params)
-    },
     // 实例化拖拽
     setSort () {
       const el = this.$refs[this.refName].$el.querySelectorAll('.el-table__body-wrapper > table > tbody')[0]
@@ -451,66 +215,6 @@ export default {
           this.$emit('drag-end', evt)
         }
       })
-    },
-    // 当用户手动勾选数据行的 Checkbox 时触发的事件
-    select (selection, row) {
-      this.$emit('select', selection, row)
-    },
-    // 当用户手动勾选全选 Checkbox 时触发的事件
-    selectAll (selection) {
-      this.$emit('select-all', selection)
-    },
-    // 当单元格 hover 进入时会触发该事件
-    cellMouseEnter (row, column, cell, event) {
-      this.$emit('cell-mouse-enter', row, column, cell, event)
-    },
-    // 当单元格 hover 退出时会触发该事件
-    cellMouseLeave (row, column, cell, event) {
-      this.$emit('cell-mouse-leave', row, column, cell, event)
-    },
-    // 当某个单元格被点击时会触发该事件
-    cellClick (row, column, cell, event) {
-      this.$emit('cell-click', row, column, cell, event)
-    },
-    // 当某个单元格被双击击时会触发该事件
-    cellDblclick (row, column, cell, event) {
-      this.$emit('cell-dbclick', row, column, cell, event)
-    },
-    // 当某一行被点击时会触发该事件
-    rowClick (row, column, event) {
-      this.$emit('row-click', row, column, event)
-    },
-    // 当某一行被鼠标右键点击时会触发该事件
-    rowContextmenu (row, column, event) {
-      this.$emit('row-contextmenu', row, column, event)
-    },
-    // 当某一行被双击时会触发该事件
-    rowDblclick (row, column, event) {
-      this.$emit('row-dblclick', row, column, event)
-    },
-    // 当某一列的表头被点击时会触发该事件
-    headerClick (column, event) {
-      this.$emit('headerc-lick', column, event)
-    },
-    // 当某一列的表头被鼠标右键点击时触发该事件
-    headerContextmenu (column, event) {
-      this.$emit('header-contextmenu', column, event)
-    },
-    // 当表格的排序条件发生变化的时候会触发该事件
-    sortChange ({ column, prop, order }) {
-      this.$emit('sort-change', { column, prop, order })
-    },
-    // 当表格的筛选条件发生变化的时候会触发该事件，参数的值是一个对象，对象的 key 是 column 的 columnKey，对应的 value 为用户选择的筛选条件的数组。
-    filterChange (filters) {
-      this.$emit('filterc-hange', filters)
-    },
-    // 当拖动表头改变了列的宽度的时候会触发该事件
-    headerDragend (newWidth, oldWidth, column, event) {
-      this.$emit('header-dragend', newWidth, oldWidth, column, event)
-    },
-    // 当用户对某一行展开或者关闭的时候会触发该事件（展开行时，回调的第二个参数为 expandedRows；树形表格时第二参数为 expanded）
-    expandChange (row, type) {
-      this.$emit('expand-change', row, type)
     },
     // 用于多选表格，清空用户的选择
     clearSelection () {

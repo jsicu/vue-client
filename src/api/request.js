@@ -1,3 +1,10 @@
+/*
+ * @Author: linzq
+ * @Date: 2020-11-25 14:32:29
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-04-20 17:52:12
+ * @Description:
+ */
 import axios from 'axios'
 import qs from 'qs'
 import config from '@/config'
@@ -5,8 +12,10 @@ import wsCache from '@/cache'
 
 import { Message } from 'element-ui'
 
-export const PATH_URL = process.env.NODE_ENV === 'development' ? config.base_url.dev : config.base_url.pro
+export const PATH_URL = config.base_url
 // const PATH_URL = '/api'
+
+let newToken = false // 是否需要刷新token
 
 // 创建axios实例
 const service = axios.create({
@@ -17,6 +26,10 @@ const service = axios.create({
 // request拦截器
 service.interceptors.request.use(
   config => {
+    //  刷新token
+    if (newToken && wsCache.get('userInfo')) {
+      config.headers['refresh_token'] = wsCache.get('userInfo').refreshToken
+    }
     if (wsCache.get('userInfo')) {
       config.headers['token'] = wsCache.get('userInfo').token
     }
@@ -38,6 +51,16 @@ service.interceptors.request.use(
 // response 拦截器
 service.interceptors.response.use(
   res => {
+    if (res.data.refresh) {
+      newToken = true
+    } else if (res.headers.authorization) {
+      // 更新token
+      newToken = false
+      const info = wsCache.get('userInfo')
+      info.token = res.headers.authorization
+      wsCache.set('userInfo', info)
+    }
+
     /**
      * 返回体格式
      * {
@@ -49,14 +72,16 @@ service.interceptors.response.use(
     if (res.data.code === 1) {
       return res.data.data
     } else {
-      // config.one_message ? ResetMessage.error(response.data.message) : Message.error(response.data.message)
+      config.one_message ? Message.closeAll() : null
       Message.error(res.data.message)
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    if (error.response)
-      config.one_message ? ResetMessage.error(error.response.data.message) : Message.error(error.response.data.message)
+    console.log('err: ' + error) // for debug
+    if (error.response) {
+      config.one_message ? Message.closeAll() : null
+      Message.error(error.response.data.message || error.response.data)
+    }
     return Promise.reject(error)
   }
 )

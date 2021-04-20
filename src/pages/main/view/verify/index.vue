@@ -30,6 +30,7 @@
         <el-button type="text" @click="click">点击打开验证</el-button>
         <verify
           :visible="visible"
+          :captchaType="moduleName"
           barHeight="30px"
           :imgSize="imgSize"
           @success="success"
@@ -40,7 +41,7 @@
         <br />
         <br />
         <div>
-          <strong>注意：</strong>拼图验证和点击验证的普通模式第一次必定失败是由于验证接口设计如此（只保存最近一次的验证数据），并非验证组件问题
+          <!-- <strong>注意：</strong>拼图验证和点击验证的普通模式第一次必定失败是由于验证接口设计如此（只保存最近一次的验证数据），并非验证组件问题 -->
         </div>
       </div>
     </div>

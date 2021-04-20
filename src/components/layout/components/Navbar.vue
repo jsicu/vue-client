@@ -71,7 +71,7 @@ export default {
       this.$store.dispatch('toggleSideBar')
     },
     async logout() {
-      const res = await this.$api.login.logout()
+      // const res = await this.$api.login.logout()
       sessionStorage.removeItem('userInfo')
       sessionStorage.removeItem('menuList')
       resetRouter() // 重置静态路由表
