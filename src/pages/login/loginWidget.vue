@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-30 20:55:07
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-16 13:39:59
+ * @LastEditTime: 2021-04-21 14:43:50
  * @Description: 
 -->
 <template>
@@ -137,7 +137,7 @@ export default {
   },
   mounted: function () {
     this.elegantSentences = chooseElegantSentencesLogin()
-    setTimer(this.serverAttachTest, 1000)
+    // setTimer(this.serverAttachTest, 1000)
   }
 }
 </script>
