@@ -2,16 +2,16 @@
  * @Author: linzq
  * @Date: 2021-02-20 16:07:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-21 14:52:41
+ * @LastEditTime: 2021-04-24 23:09:10
  * @Description:
  */
 const path = require('path')
 // gzip压缩
 const CompressionPlugin = require('compression-webpack-plugin')
-// 缩小css
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 // 代码压缩
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+// 大文件定位
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
 
 const defaultSettings = require('./src/config')
 
@@ -20,16 +20,6 @@ const Timestamp = new Date().getTime()
 
 const resolve = dir => {
   return path.join(__dirname, dir)
-}
-const cdn = {
-  js: [
-    // vue必须在第一个
-    'https://cdn.bootcss.com/vue/2.6.10/vue.min.js',
-    'https://cdn.bootcss.com/vuex/3.1.0/vuex.min.js',
-    'https://cdn.bootcss.com/vue-router/3.0.6/vue-router.min.js',
-    'https://cdn.bootcss.com/axios/0.18.1/axios.min.js',
-    'https://cdn.bootcss.com/qs/6.5.1/qs.min.js'
-  ]
 }
 
 module.exports = {
@@ -46,23 +36,6 @@ module.exports = {
   // 如果你不需要使用eslint，把lintOnSave设为false即可
   lintOnSave: true,
 
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      // 为生产环境修改配置...
-    } else {
-      // 为开发环境修改配置...
-    }
-    // config.plugins.push(
-    //   new CompressionPlugin({
-    //     filename: '[path].gz[query]',
-    //     algorithm: 'gzip',
-    //     test: /\.js$|\.html$|\.css/,
-    //     threshold: 10240, // 只有大小大于该值的资源会被处理 10240
-    //     minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-    //     deleteOriginalAssets: false // 删除原文件
-    //   })
-    // )
-  },
   configureWebpack: {
     name,
     output: {
@@ -71,20 +44,15 @@ module.exports = {
       chunkFilename: `js/[name].${process.env.VUE_APP_Version}.${Timestamp}.js`
     },
     plugins: [
-      new MiniCssExtractPlugin({
-        // 打包后css文件名 [模块名称.版本号.时间戳]
-        filename: `css/[name].${process.env.VUE_APP_Version}.${Timestamp}.css`,
-        chunkFilename: `css/[name].${process.env.VUE_APP_Version}.${Timestamp}.css`
+      // new BundleAnalyzerPlugin(),
+      new CompressionPlugin({
+        filename: '[path][base].gz',
+        algorithm: 'gzip',
+        test: /\.js$|\.html$|\.css/,
+        threshold: 10240, // 只有大小大于该值的资源会被处理 10240字节
+        minRatio: 1, // 只有压缩率小于这个值的资源才会被处理
+        deleteOriginalAssets: false // 删除原文件
       }),
-      // gzip压缩
-      // new CompressionPlugin({
-      //   filename: '[path].gz[query]',
-      //   algorithm: 'gzip',
-      //   test: /\.js$|\.html$|\.css/,
-      //   threshold: 10240, // 只有大小大于该值的资源会被处理 10240
-      //   minRatio: 0.8, // 只有压缩率小于这个值的资源才会被处理
-      //   deleteOriginalAssets: false // 删除原文件
-      // }),
       // 生产环境移除console
       process.env.NODE_ENV === 'production'
         ? new UglifyJsPlugin({
@@ -104,12 +72,13 @@ module.exports = {
         : () => {}
     ],
     externals: {
-      // BMap: 'BMap',
-      // vue: 'Vue'
-      // vuex: 'Vuex',
-      // 'vue-router': 'VueRouter',
-      // axios: 'axios',
-      // qs: 'Qs'
+      BMap: 'BMap',
+      vue: 'Vue',
+      vuex: 'Vuex',
+      'vue-router': 'VueRouter',
+      axios: 'axios',
+      echarts: 'echarts',
+      'element-ui': 'ELEMENT'
     },
     resolve: {
       alias: {
@@ -123,10 +92,6 @@ module.exports = {
   chainWebpack: config => {
     const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
     types.forEach(type => addStyleResource(config.module.rule('less').oneOf(type)))
-    // config.plugin('html').tap(args => {
-    //   args[0].cdn = cdn
-    //   return args
-    // })
     // 压缩图片
     config.module
       .rule('images')

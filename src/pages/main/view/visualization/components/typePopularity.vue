@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-03 16:54:20
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-06 15:18:10
+ * @LastEditTime: 2021-04-21 16:05:56
  * @Description: 
 -->
 <template>
@@ -11,7 +11,7 @@
 </template>
  
 <script>
-import * as echarts from 'echarts'
+// import * as echarts from 'echarts'
 export default {
   name: '',
   data() {
@@ -102,7 +102,7 @@ export default {
                   { offset: 0, color: '#83bff6' },
                   { offset: 0.5, color: '#188df0' },
                   { offset: 1, color: '#188df0' }
-                ]),
+                ])
                 // label: {
                 //   show: true, //开启显示
                 //   position: 'top', //在上方显示
