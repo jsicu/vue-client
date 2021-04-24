@@ -2,15 +2,15 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-20 17:52:12
+ * @LastEditTime: 2021-04-21 16:10:17
  * @Description:
  */
-import axios from 'axios'
+// import axios from 'axios'
 import qs from 'qs'
 import config from '@/config'
 import wsCache from '@/cache'
 
-import { Message } from 'element-ui'
+// import { Message } from 'element-ui'
 
 export const PATH_URL = config.base_url
 // const PATH_URL = '/api'
@@ -72,15 +72,15 @@ service.interceptors.response.use(
     if (res.data.code === 1) {
       return res.data.data
     } else {
-      config.one_message ? Message.closeAll() : null
-      Message.error(res.data.message)
+      config.one_message ? ELEMENT.Message.closeAll() : null
+      ELEMENT.Message.error(res.data.message)
     }
   },
   error => {
     console.log('err: ' + error) // for debug
     if (error.response) {
-      config.one_message ? Message.closeAll() : null
-      Message.error(error.response.data.message || error.response.data)
+      config.one_message ? ELEMENT.Message.closeAll() : null
+      ELEMENT.Message.error(error.response.data.message || error.response.data)
     }
     return Promise.reject(error)
   }

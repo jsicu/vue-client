@@ -1,10 +1,10 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+// import VueRouter from 'vue-router'
 import Layout from '@/components/layout'
 
 import image from './modules/image' // 子目录不多暂不单独创建文件
 
-Vue.use(Router)
+// Vue.use(VueRouter)
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -166,13 +166,13 @@ export const asyncRoutes = [
     children: [
       {
         path: 'bigScreen',
-        component: () => import('@mainView/visualization/bigScreen'),
+        component: () => import( '@mainView/visualization/bigScreen'),
         name: 'bigScreen',
         meta: { title: '可视化大屏', icon: 'screen' }
       },
       {
         path: 'scenic',
-        component: () => import('@mainView/visualization/scenic'),
+        component: () => import( '@mainView/visualization/scenic'),
         name: 'scenic',
         meta: { 
           title: '景区管理', 
@@ -200,7 +200,7 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () =>
-  new Router({
+  new VueRouter({
     // mode: 'history', // require service support
     scrollBehavior: () => ({ y: 0 }),
     routes: constantRoutes
