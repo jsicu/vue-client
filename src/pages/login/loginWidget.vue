@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-03-30 20:55:07
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-24 23:17:52
+ * @LastEditTime: 2021-04-25 15:35:21
  * @Description: 
 -->
 <template>
@@ -45,7 +45,6 @@
 
 
 <script>
-import { setTimer, touchError } from '@/utils/timer'
 import { chooseElegantSentencesLogin } from '@/utils/chooseElegantSentences'
 import { JSEncrypt } from 'jsencrypt'
 import { rsaEncrypt } from '@/utils/index.js'
@@ -73,7 +72,8 @@ export default {
         password: [{ required: true, trigger: 'blur' }]
       },
       loading: false,
-      pwdType: 'password'
+      pwdType: 'password',
+      loop: ''
     }
   },
   computed: {},
@@ -125,6 +125,7 @@ export default {
     // 服务器可接入测试
     async serverAttachTest() {
       this.dataBeforeTime = new Date().getTime()
+      console.log('11')
       try {
         await this.$api.common.serveTest()
         this.IsNormal = true
@@ -137,7 +138,10 @@ export default {
   },
   mounted: function () {
     this.elegantSentences = chooseElegantSentencesLogin()
-    setTimer(this.serverAttachTest, 1000)
+    this.loop = setInterval(this.serverAttachTest, 1000)
+  },
+  beforeDestroy() {
+    clearInterval(this.loop)
   }
 }
 </script>

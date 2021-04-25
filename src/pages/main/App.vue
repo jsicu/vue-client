@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-31 20:57:20
+ * @LastEditTime: 2021-04-25 15:23:17
  * @Description: 
 -->
 <template>
@@ -42,8 +42,8 @@ export default {
       })
     }
   },
-  beforeDestroy() {
-    alert('111')
+  destroyed() {
+    window.removeEventListener('beforeunload', e => this.logout())
   },
   methods: {
     ...mapActions({

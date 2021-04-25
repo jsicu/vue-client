@@ -26,39 +26,39 @@ export default {
     }
   },
   created() {
-    if (this.beforeGetList) {
-      this.beforeGetList()
-    } else {
-      this.getList()
-    }
+    this.getList()
   },
   methods: {
     // 获取列表数据
     async getList() {
-      this.loading = true
-      try {
-        // console.log(Object.assign(this.otherParams || {}, this.defaultParams))
-        // console.log([this.$route.meta.module],[this.$route.meta.request])
-        let res = {}
-        // 自定义请求路径
-        if (this.apiUrl && this.listApi) {
-          res = await this.$api[this.apiUrl][this.listApi](Object.assign({}, this.otherParams, this.defaultParams))
-        } else {
-          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.listApi || 'list']](
-            Object.assign({}, this.otherParams, this.defaultParams)
-          )
-        }
-        if (res) {
-          this.listData = res.list
-          this.total = res.total || 0
-          if (this.getListAfter) {
-            this.getListAfter()
+      if (this.beforeGetList) {
+        this.beforeGetList()
+      } else {
+        this.loading = true
+        try {
+          // console.log(Object.assign(this.otherParams || {}, this.defaultParams))
+          // console.log([this.$route.meta.module],[this.$route.meta.request])
+          let res = {}
+          // 自定义请求路径
+          if (this.apiUrl && this.listApi) {
+            res = await this.$api[this.apiUrl][this.listApi](Object.assign({}, this.otherParams, this.defaultParams))
+          } else {
+            res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.listApi || 'list']](
+              Object.assign({}, this.otherParams, this.defaultParams)
+            )
           }
+          if (res) {
+            this.listData = res.list
+            this.total = res.total || 0
+            if (this.getListAfter) {
+              this.getListAfter()
+            }
+          }
+          this.loading = false
+        } catch (err) {
+          this.loading = false
+          throw err
         }
-        this.loading = false
-      } catch (err) {
-        this.loading = false
-        throw err
       }
     },
     // 查询
@@ -135,33 +135,38 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-      }).then(async () => {
-        this.delLoading = true
-        // 兼容批量删除参数不统一
-        let ids = ''
-        if (!data) {
-          ids = this.multipleSelection
-            .map(item => {
-              return item.id
-            })
-            .join(',')
-        }
-        let res = {}
-        // 自定义请求路径
-        if (this.apiUrl && this.delApi) {
-          res = await this.$api[this.apiUrl][this.delApi](data ? data : { ids })
-        } else {
-          res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.delApi || 'del']](
-            data ? data : { ids }
-          )
-        }
-        if (res) {
-          this.$message.success('删除成功')
-          this.defaultParams.pageNum = 1
-          this.getList()
-        }
-        this.delLoading = false
       })
+        .then(async () => {
+          this.delLoading = true
+          // 兼容批量删除参数不统一
+          let ids = ''
+          if (!data) {
+            ids = this.multipleSelection
+              .map(item => {
+                return item.id
+              })
+              .join(',')
+          }
+          let res = {}
+          // 自定义请求路径
+          if (this.apiUrl && this.delApi) {
+            res = await this.$api[this.apiUrl][this.delApi](data ? data : { ids })
+          } else {
+            res = await this.$api[this.$route.meta.module][this.$route.meta.request[this.delApi || 'del']](
+              data ? data : { ids }
+            )
+          }
+          if (res) {
+            this.$message.success('删除成功')
+            this.defaultParams.pageNum = 1
+            this.getList()
+          }
+          this.delLoading = false
+        })
+        .catch(error => {
+          console.log(error)
+          this.delLoading = false
+        })
     },
     // 删除单条
     async delOne(data) {
@@ -189,12 +194,12 @@ export default {
         })
         .catch(err => {
           console.log(err)
+          _this.delLoading = false
         })
     },
     // 隐性删除单条（无确认提醒）
     async latentDel(data) {
       const _this = this
-      _this.delLoading = true
       let res = {}
       // 自定义请求路径
       if (this.apiUrl && this.delApi) {
@@ -206,7 +211,6 @@ export default {
         _this.defaultParams.pageNum = 1
         _this.getList()
       }
-      _this.delLoading = false
     },
     // 多选
     selectCell(val) {

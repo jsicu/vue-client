@@ -5,7 +5,6 @@ import permission from './modules/permission'
 import tagsView from './modules/tagsView'
 import getters from './getters'
 import dictData from './modules/dictData'
-import timer from './modules/timer'
 
 // Vue.use(Vuex)
 
@@ -14,8 +13,7 @@ const store = new Vuex.Store({
     app,
     permission,
     tagsView,
-    dictData,
-    timer
+    dictData
   },
   getters
 })
