@@ -166,20 +166,33 @@ export const asyncRoutes = [
     children: [
       {
         path: 'bigScreen',
-        component: () => import( '@mainView/visualization/bigScreen'),
+        component: () => import('@mainView/visualization/bigScreen'),
         name: 'bigScreen',
         meta: { title: '可视化大屏', icon: 'screen' }
       },
       {
         path: 'scenic',
-        component: () => import( '@mainView/visualization/scenic'),
+        component: () => import('@mainView/visualization/scenic'),
         name: 'scenic',
-        meta: { 
-          title: '景区管理', 
+        meta: {
+          title: '景区管理',
           icon: 'message',
           module: 'bigScreen',
-          request: {list:'list'}
+          request: { list: 'list' }
         }
+      }
+    ]
+  },
+  {
+    path: '/schedule',
+    component: Layout,
+    redirect: '/schedule',
+    children: [
+      {
+        path: '/schedule',
+        component: () => import('@mainView/schedule/index'),
+        name: 'schedule',
+        meta: { title: '开发任务管理', icon: 'example', noCache: true }
       }
     ]
   },

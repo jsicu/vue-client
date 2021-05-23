@@ -1,9 +1,9 @@
-/*
+/**
  * @Author: linzq
- * @Date: 2020-11-25 14:32:29
+ * @Date: 2021-04-21 14:51:38
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-21 16:05:39
- * @Description:
+ * @LastEditTime: 2021-05-20 16:47:49
+ * @Description: 主页入口
  */
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
@@ -32,9 +32,9 @@ Vue.prototype.$wsCache = wsCache
 Vue.prototype.$config = config
 Vue.prototype.$echarts = echarts
 
-// Vue.use(ElementUI, {
-//   size: config.size || 'medium' // set element-ui default size
-// })
+Vue.use(ELEMENT, {
+  size: config.size || 'medium' // set element-ui default size
+})
 Vue.use(dataV)
 
 /* eslint-disable no-new */

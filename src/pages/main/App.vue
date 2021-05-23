@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2020-11-25 14:32:29
  * @LastEditors: linzq
- * @LastEditTime: 2021-04-25 15:23:17
+ * @LastEditTime: 2021-04-26 20:51:53
  * @Description: 
 -->
 <template>
@@ -18,9 +18,6 @@ import { mapActions } from 'vuex'
 
 export default {
   name: 'App',
-  mounted() {
-    window.addEventListener('beforeunload', e => this.logout())
-  },
   created() {
     this.getDicData()
 
@@ -42,9 +39,6 @@ export default {
       })
     }
   },
-  destroyed() {
-    window.removeEventListener('beforeunload', e => this.logout())
-  },
   methods: {
     ...mapActions({
       getDicData: 'getDicData'
@@ -55,9 +49,6 @@ export default {
       if (res) {
         this.$wsCache.set('menuList', res)
       }
-    },
-    async logout() {
-      await this.$api.login.logout()
     }
   }
 }

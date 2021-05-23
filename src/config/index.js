@@ -1,15 +1,13 @@
-/*
- * @Author: linzq
- * @Date: 2020-11-25 14:32:29
- * @LastEditors: linzq
- * @LastEditTime: 2021-04-15 09:20:19
- * @Description: 配置
- */
 /**
- * 全局配置
+ * @Author: linzq
+ * @Date: 2021-04-14 22:19:19
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-05-21 11:00:07
+ * @Description: 全局配置
  */
 api = {
   dev: 'http://localhost:4000/', // 开发地址
+  // dev: 'http://139.9.51.227:4000/', // 开发地址
   pro: 'http://139.9.51.227:4000/' //生产地址
 }
 module.exports = {
