@@ -192,7 +192,38 @@ export const asyncRoutes = [
         path: '/schedule',
         component: () => import('@mainView/schedule/index'),
         name: 'schedule',
-        meta: { title: '开发任务管理', icon: 'example', noCache: true }
+        meta: {
+          title: '开发任务管理',
+          icon: 'example',
+          noCache: true,
+          module: 'schedule',
+          request: {
+            list: 'list',
+            del: 'del'
+          }
+        }
+      }
+    ]
+  },
+  {
+    path: '/system',
+    component: Layout,
+    redirect: '/system',
+    children: [
+      {
+        path: 'route',
+        component: () => import('@mainView/system/routeManage'),
+        name: 'route',
+        meta: {
+          title: '开发任务管理',
+          icon: 'example',
+          noCache: true,
+          module: 'system',
+          request: {
+            list: 'list',
+            del: 'del'
+          }
+        }
       }
     ]
   },

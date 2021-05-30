@@ -2,7 +2,7 @@
  * @Author: linzq
  * @Date: 2021-04-21 14:51:38
  * @LastEditors: linzq
- * @LastEditTime: 2021-05-20 16:47:49
+ * @LastEditTime: 2021-05-29 21:54:24
  * @Description: 主页入口
  */
 // The Vue build version to load with the `import` command
@@ -27,6 +27,10 @@ import dataV from '@jiaminghi/data-view'
 
 Vue.config.productionTip = false
 
+import { ResetMessage } from '@components/ResetMessage' // 引入自定义message配置
+if (config.one_message) {
+  Vue.prototype.$message = ResetMessage
+}
 Vue.prototype.$api = api
 Vue.prototype.$wsCache = wsCache
 Vue.prototype.$config = config
