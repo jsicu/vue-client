@@ -2,14 +2,15 @@
  * @Author: linzq
  * @Date: 2021-03-22 11:41:42
  * @LastEditors: linzq
- * @LastEditTime: 2021-03-29 19:46:23
+ * @LastEditTime: 2021-05-31 21:03:10
  * @Description: 景区管理
 -->
 <template>
   <div class="base-wrap">
     <div class="content">
       <div class="base-title">景区管理</div>
-      <search show-export :data="searchData" @search-reset="reset" @search-submit="searchSubmit" />
+      <search show-export showAdd :data="searchData" @search-reset="reset" @search-submit="searchSubmit"
+        @add="() =>{dialogVisible = true}" />
       <com-table :columns="columns" :data="listData" :loading="loading">
         <template slot="type" slot-scope="{row}">
           <div>{{row.type | capitalize}}</div>
@@ -19,6 +20,19 @@
         :page-size="defaultParams.pageSize" class="com-table-pagination" layout="total, sizes, prev, pager, next, jumper"
         :total="total" @size-change="handleSizeChange" @current-change="handleCurrentChange" />
     </div>
+    <el-dialog title="新增" :visible.sync="dialogVisible" :close-on-click-modal="false" width="40%"
+      @close="closeDialog('ruleForm')">
+      <el-form ref="ruleForm" :model="form" label-width="80px" :rules="rules">
+        <el-form-item label="景区名称">
+          <el-input v-model="form.destName" style="width: 80%">
+          </el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submitForm('ruleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -90,7 +104,8 @@ export default {
           clearable: true,
           options: this.$store.getters['1'] || []
         }
-      ]
+      ],
+      form: {}
     }
   },
   filters: {
@@ -141,7 +156,28 @@ export default {
   created() {},
   mounted() {},
   // 方法集合
-  methods: {}
+  methods: {
+    // 新增弹窗关闭
+    closeDialog(formName) {
+      this.dialogVisible = false
+      this.form = {}
+      this.$refs[formName].resetFields()
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          console.log(this.form)
+          // 修改新增同一个接口
+          const res = await this.$api.bigScreen.newDest(this.form)
+          console.log(res)
+          // this.dialogVisible = false
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    }
+  }
 }
 </script>
 <style lang='less' scoped>

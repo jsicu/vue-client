@@ -1,3 +1,10 @@
+/**
+ * @Author: linzq
+ * @Date: 2021-04-14 22:19:19
+ * @LastEditors: linzq
+ * @LastEditTime: 2021-05-31 21:02:32
+ * @Description:
+ */
 /*
  * @Author: linzq
  * @Date: 2021-03-01 20:20:01
@@ -12,6 +19,10 @@ export default {
   // 列表获取
   list: function(params) {
     return get(params, '/bigScreen/list')
+  },
+  // 新增景区
+  newDest: function(params) {
+    return post(params, '/bigScreen/dest')
   },
   // 列表获取
   allList: function(params) {
